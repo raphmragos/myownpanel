@@ -1,7 +1,8 @@
 #!/bin/bash
 # ==============================================================================
-# VIRGOZKI PANEL • AUTO-DETECT + NUMBERED REGION SELECT
+# VIRGOZKI PANEL • MANUAL REGION SELECT ONLY
 # ALL REGIONS WITH COUNTRY • XHTTP FIXED • HTTPUPGRADE INTACT
+# NO AUTO-DETECT • ALL OTHER FILES UNCHANGED
 # ==============================================================================
 
 BOLD='\033[1m'; RESET='\033[0m'
@@ -64,7 +65,7 @@ clear
 echo ""
 echo -e "  ${BOLD}${WHITE}VIRGOZKI PANEL (QWIKLABS OPTIMIZED)${RESET}"
 echo -e "  ${MAGENTA}MADE BY VIRGOZKI${RESET}"
-echo -e "  ${GREEN}✅ AUTO-DETECT + MANUAL SELECT • ALL REGIONS • XHTTP FIXED${RESET}"
+echo -e "  ${GREEN}✅ MANUAL SELECT ONLY • ALL REGIONS • XHTTP FIXED${RESET}"
 echo ""
 
 PROJECT_ID=$(gcloud config get-value project 2>/dev/null | tr -d '[:space:]')
@@ -75,21 +76,17 @@ fi
 echo -e "  ${CYAN}PROJECT: ${GREEN}${PROJECT_ID}${RESET}"
 
 # ==============================================
-# 🧠 AUTO-DETECT REGION
+# ⚠️ NO AUTO-DETECT: DEFAULT TO SINGAPORE
 # ==============================================
-echo -ne "  ${CYAN}🔍 DETECTING CURRENT REGION... ${RESET}"
-REGION=$(gcloud config get-value compute/region 2>/dev/null | tr -d '[:space:]')
-[ -z "$REGION" ] && REGION=$(gcloud config get-value run/region 2>/dev/null | tr -d '[:space:]')
-[ -z "$REGION" ] && REGION=$(gcloud run regions list --format="value(REGION)" --limit=1 2>/dev/null | tr -d '[:space:]')
-[ -z "$REGION" ] && REGION="asia-southeast1"
-echo -e "${GREEN}${REGION}${RESET}"
+REGION="asia-southeast1"
+echo -e "  ${CYAN}📍 DEFAULT REGION: ${GREEN}${REGION}${RESET}"
 echo ""
 
 # ==============================================
 # 🔢 MANUAL SELECTION MENU (NUMBERED REGIONS)
 # ==============================================
-echo -e "  ${CYAN}📋 PUMILI NG REGION (0 = GAMITIN ANG NA-DETECT):${RESET}"
-echo -e "  ${YELLOW}0) ${GREEN}${REGION} ${CYAN}(Auto-Detected) ✅${RESET}"
+echo -e "  ${CYAN}📋 PUMILI NG REGION (0 = GAMITIN DEFAULT):${RESET}"
+echo -e "  ${YELLOW}0) ${GREEN}${REGION} ${CYAN}(Default)${RESET}"
 echo ""
 for i in "${!ALL_REGIONS[@]}"; do
   IFS=':' read -r num reg_name country <<< "${ALL_REGIONS[$i]}"
@@ -100,7 +97,6 @@ read -r -p "$(echo -e "  ${CYAN}ILAGAY ANG NUMBER: ${RESET}")" REG_CHOICE
 
 # I-apply ang napiling region
 if [[ "$REG_CHOICE" =~ ^[0-9]+$ ]]; then
-  # Kung number ay pasok sa listahan
   FOUND=0
   for item in "${ALL_REGIONS[@]}"; do
     IFS=':' read -r num reg_name _ <<< "$item"
@@ -112,9 +108,8 @@ if [[ "$REG_CHOICE" =~ ^[0-9]+$ ]]; then
       break
     fi
   done
-  # Kung invalid number o 0, gamitin ang na-detect
   if [ "$FOUND" -eq 0 ] && [ "$REG_CHOICE" != "0" ]; then
-    echo -e "  ${YELLOW}⚠️ INVALID NUMBER – GAMITIN ANG NA-DETECT${RESET}"
+    echo -e "  ${YELLOW}⚠️ INVALID NUMBER – GAMITIN DEFAULT${RESET}"
   fi
 fi
 echo -e "  ${CYAN}✅ FINAL REGION: ${GREEN}${REGION}${RESET}"
@@ -290,4 +285,4 @@ fi
 
 # ✅ CLEANUP
 rm -f build.log deploy.log
-echo -e "\n  ${GREEN}✅ SCRIPT FINISHED • ALL REGIONS LOADED • XHTTP WORKING${RESET}"
+echo -e "\n  ${GREEN}✅ SCRIPT FINISHED • AUTO-DETECT REMOVED • ALL ELSE UNCHANGED${RESET}"
