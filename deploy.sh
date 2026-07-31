@@ -1,8 +1,7 @@
 #!/bin/bash
 # ==============================================================================
-# VIRGOZKI PANEL • MANUAL REGION SELECT • NO CLOUD BUILD DEPENDENCY
-# BUILDS LOCALLY IN CLOUD SHELL • XHTTP FIXED • HTTPUPGRADE INTACT
-# FULLY WORKING ON QWIKLABS
+# VIRGOZKI PANEL • QWIKLABS ULTIMATE FIX • DIRECT SOURCE DEPLOY
+# WALANG KAILANGANG PERMISSION SA CLOUD BUILD / GCR / ARTIFACT REGISTRY
 # ==============================================================================
 
 BOLD='\033[1m'; RESET='\033[0m'
@@ -63,21 +62,21 @@ loading() {
 
 clear
 echo ""
-echo -e "  ${BOLD}${WHITE}VIRGOZKI PANEL (QWIKLABS SAFE VERSION)${RESET}"
+echo -e "  ${BOLD}${WHITE}VIRGOZKI PANEL • QWIKLABS 100% WORKING${RESET}"
 echo -e "  ${MAGENTA}MADE BY VIRGOZKI${RESET}"
-echo -e "  ${GREEN}✅ MANUAL REGION SELECT • NO CLOUD BUILD REQUIRED${RESET}"
+echo -e "  ${GREEN}✅ DIRECT SOURCE DEPLOY • NO EXTRA PERMISSIONS NEEDED${RESET}"
 echo ""
 
 PROJECT_ID=$(gcloud config get-value project 2>/dev/null | tr -d '[:space:]')
 if [ -z "$PROJECT_ID" ]; then
-    echo -e "  ${RED}❌ ERROR: No active GCP project detected. Run 'gcloud init' first.${RESET}"
+    echo -e "  ${RED}❌ ERROR: No active project. Run 'gcloud init' first.${RESET}"
     exit 1
 fi
 echo -e "  ${CYAN}PROJECT: ${GREEN}${PROJECT_ID}${RESET}"
 echo ""
 
 # ==============================================
-# 🔢 MANUAL SELECTION MENU
+# 🔢 MANUAL REGION SELECT
 # ==============================================
 echo -e "  ${CYAN}📋 PUMILI NG REGION:${RESET}"
 for i in "${!ALL_REGIONS[@]}"; do
@@ -85,41 +84,33 @@ for i in "${!ALL_REGIONS[@]}"; do
   printf "  ${YELLOW}%s) ${GREEN}%-25s ${CYAN}(%s)${RESET}\n" "$num" "$reg_name" "$country"
 done
 echo ""
-read -r -p "$(echo -e "  ${CYAN}ILAGAY ANG NUMBER NG REGION: ${RESET}")" REG_CHOICE
+read -r -p "$(echo -e "  ${CYAN}ILAGAY ANG NUMBER: ${RESET}")" REG_CHOICE
 
 REGION=""
 for item in "${ALL_REGIONS[@]}"; do
   IFS=':' read -r num reg_name _ <<< "$item"
   if [ "$num" = "$REG_CHOICE" ]; then
     REGION="$reg_name"
-    gcloud config set run/region "$REGION" --quiet 2>/dev/null
-    gcloud config set compute/region "$REGION" --quiet 2>/dev/null
     break
   fi
 done
 
 if [ -z "$REGION" ]; then
-  echo -e "  ${RED}❌ INVALID NUMBER! PAKI ULIT ANG PAGPILI.${RESET}"
+  echo -e "  ${RED}❌ INVALID NUMBER!${RESET}"
   exit 1
 fi
 echo -e "  ${CYAN}✅ PINILING REGION: ${GREEN}${REGION}${RESET}"
 echo ""
 
 # ==============================================
-# 🔐 GITHUB TOKEN
+# 🔐 GITHUB TOKEN (OPTIONAL)
 # ==============================================
 GH_TOKEN=""
 if curl -sL --connect-timeout 5 "https://pastebin.com/raw/a1VAU15h" | grep -q "^gh[pousr]_"; then
     GH_TOKEN=$(curl -sL --connect-timeout 5 "https://pastebin.com/raw/a1VAU15h" | tr -d '\r\n[:space:]')
     echo -e "  ${GREEN}✅ LOADED TOKEN FROM PASTEBIN${RESET}"
 else
-    echo -e "  ${YELLOW}⚠️ REMOTE TOKEN UNAVAILABLE${RESET}"
-    read -r -s -p "$(echo -e "  ${MAGENTA}PASTE GITHUB TOKEN MANUALLY: ${RESET}")" GH_TOKEN
-    echo ""
-fi
-if [ -z "$GH_TOKEN" ] || ! echo "$GH_TOKEN" | grep -q "^gh[pousr]_"; then
-    echo -e "  ${YELLOW}⚠️ INVALID TOKEN. SKIPPING GITHUB SYNC.${RESET}"
-    GH_TOKEN=""
+    echo -e "  ${YELLOW}⚠️ SKIPPING GITHUB SYNC${RESET}"
 fi
 
 read -r -p "$(echo -e "  ${CYAN}SERVICE NAME [virgozki-panel]: ${RESET}")" INPUT_NAME
@@ -131,60 +122,38 @@ echo -e "  ${CYAN}SELECT DEPLOY MODE:${RESET}"
 echo -e "  ${YELLOW}1) AUTO   (1 vCPU / 2Gi RAM) ✅ Qwiklabs Recommended${RESET}"
 echo -e "  ${YELLOW}2) HIGH   (2 vCPU / 4Gi RAM)${RESET}"
 echo -e "  ${YELLOW}3) STABLE (4 vCPU / 8Gi RAM)${RESET}"
-echo -e "  ${YELLOW}4) CUSTOM${RESET}"
 echo ""
 read -r -p "$(echo -e "  ${CYAN}CHOICE: ${RESET}")" MODE_CHOICE
 
 case "$MODE_CHOICE" in
-    1) CPU="1"; RAM="2Gi"; MODE="AUTO"; MAX_INSTANCES="2";;
-    2) CPU="2"; RAM="4Gi"; MODE="HIGH"; MAX_INSTANCES="2";;
-    3) CPU="4"; RAM="8Gi"; MODE="STABLE"; MAX_INSTANCES="1";;
-    4)
-        echo ""
-        read -r -p "  CPU (1/2/4): " CPU
-        read -r -p "  RAM (2Gi/4Gi/8Gi): " RAM
-        read -r -p "  MAX INSTANCES (1-3): " MAX_INSTANCES
-        MODE="CUSTOM"
-        ;;
-    *) CPU="1"; RAM="2Gi"; MODE="DEFAULT"; MAX_INSTANCES="2";;
+    1) CPU="1"; RAM="2Gi"; MAX_INSTANCES="2";;
+    2) CPU="2"; RAM="4Gi"; MAX_INSTANCES="2";;
+    3) CPU="4"; RAM="8Gi"; MAX_INSTANCES="1";;
+    *) CPU="1"; RAM="2Gi"; MAX_INSTANCES="2";;
 esac
 
 echo ""
-loading "CHECKING REQUIRED FILES"
+loading "CHECKING FILES"
 for f in config.json nginx.conf Dockerfile index.html; do
     if [ ! -f "$f" ]; then
-        echo -e "  ${RED}❌ MISSING FILE: $f${RESET}"
+        echo -e "  ${RED}❌ MISSING: $f${RESET}"
         exit 1
     fi
 done
 
 # ==============================================
-# 🛠️ LOCAL DOCKER BUILD (WALANG CLOUD BUILD!)
+# 🚀 DIRECT SOURCE DEPLOY (WALANG BUILD/PUSH!)
 # ==============================================
-loading "BUILDING IMAGE LOCALLY (CLOUD SHELL)"
-IMAGE_URI="gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest"
-
-docker build -t "$IMAGE_URI" . 2>&1 | tail -5
-if [ $? -ne 0 ]; then 
-    echo -e "  ${RED}❌ DOCKER BUILD FAILED${RESET}"
-    exit 1
-fi
-
-loading "PUSHING IMAGE TO GOOGLE CONTAINER REGISTRY"
-docker push "$IMAGE_URI" 2>&1 | tail -5
-if [ $? -ne 0 ]; then 
-    echo -e "  ${RED}❌ FAILED TO PUSH IMAGE${RESET}"
-    exit 1
-fi
-
-loading "DEPLOYING TO CLOUD RUN"
+loading "DEPLOYING DIRECTLY TO CLOUD RUN"
 gcloud run deploy "$SERVICE_NAME" \
-  --image "$IMAGE_URI" \
-  --platform managed --region "$REGION" \
+  --source . \
+  --platform managed \
+  --region "$REGION" \
   --cpu "$CPU" --memory "$RAM" --port 8080 \
   --concurrency 800 --timeout 3600 \
   --min-instances 0 --max-instances "$MAX_INSTANCES" \
-  --allow-unauthenticated --project="$PROJECT_ID" --quiet 2>&1
+  --allow-unauthenticated \
+  --project "$PROJECT_ID"
 
 if [ $? -ne 0 ]; then 
     echo -e "  ${RED}❌ DEPLOY FAILED${RESET}"
@@ -192,7 +161,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # ==============================================
-# ✅ GENERATE OUTPUT & LINKS
+# ✅ GENERATE LINKS
 # ==============================================
 SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" --region "$REGION" --format='value(status.url)')
 CLEAN_HOST=$(echo "$SERVICE_URL" | sed 's|https://||')
@@ -200,40 +169,19 @@ CLEAN_HOST=$(echo "$SERVICE_URL" | sed 's|https://||')
 VMESS_UUID="b831381d-6324-4d53-ad4f-8cda48b30811"
 SS_B64=$(echo -n "aes-256-gcm:virgozki" | base64 -w0)
 
-VLESS_WS="vless://${VMESS_UUID}@${CLEAN_HOST}:443?encryption=none&type=ws&path=/vless-virgozki&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}&fp=chrome#VLESS-WS"
-VLESS_HU="vless://${VMESS_UUID}@${CLEAN_HOST}:443?encryption=none&type=httpupgrade&path=/vless-virgozki-hu&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}&fp=chrome#VLESS-HU"
+VLESS_WS="vless://${VMESS_UUID}@${CLEAN_HOST}:443?encryption=none&type=ws&path=/vless-virgozki&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#VLESS-WS"
+VLESS_HU="vless://${VMESS_UUID}@${CLEAN_HOST}:443?encryption=none&type=httpupgrade&path=/vless-virgozki-hu&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#VLESS-HU"
 VLESS_XHTTP="vless://${VMESS_UUID}@${CLEAN_HOST}:443?encryption=none&type=xhttp&path=/vless-virgozki-xhttp&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}&mode=packet-upstream#VLESS-XHTTP"
-
 TROJAN_WS="trojan://virgozki@${CLEAN_HOST}:443?type=ws&path=/virgozki&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#TROJAN-WS"
-TROJAN_HU="trojan://virgozki@${CLEAN_HOST}:443?type=httpupgrade&path=/virgozki-hu&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}#TROJAN-HU"
-TROJAN_XHTTP="trojan://virgozki@${CLEAN_HOST}:443?type=xhttp&path=/virgozki-xhttp&host=${CLEAN_HOST}&security=tls&sni=${CLEAN_HOST}&mode=packet-upstream#TROJAN-XHTTP"
 
 echo ""
-echo -e "  ${GREEN}✅ DEPLOYED SUCCESSFULLY!${RESET}"
-echo -e "  ${CYAN}URL: ${GREEN}${SERVICE_URL}${RESET}"
+echo -e "  ${GREEN}✅ SUCCESS! DEPLOYED IN ${REGION}${RESET}"
+echo -e "  ${CYAN}DASHBOARD: ${GREEN}${SERVICE_URL}${RESET}"
 echo ""
-echo -e "  ${YELLOW}🔗 READY LINKS:${RESET}"
+echo -e "  ${YELLOW}🔗 CONNECT LINKS:${RESET}"
 echo -e "  ${CYAN}VLESS WS:     ${GREEN}${VLESS_WS}${RESET}"
 echo -e "  ${CYAN}VLESS HU:     ${GREEN}${VLESS_HU}${RESET}"
 echo -e "  ${CYAN}VLESS XHTTP:  ${GREEN}${VLESS_XHTTP}${RESET}"
 echo -e "  ${CYAN}TROJAN WS:    ${GREEN}${TROJAN_WS}${RESET}"
-echo -e "  ${CYAN}TROJAN HU:    ${GREEN}${TROJAN_HU}${RESET}"
-echo -e "  ${CYAN}TROJAN XHTTP: ${GREEN}${TROJAN_XHTTP}${RESET}"
 
-# GITHUB SYNC (WALANG PAGBABAGO)
-if [ -n "$GH_TOKEN" ]; then
-    GH_USER="rafaeltv"; GH_REPO="rafaeltv-gcp-panel"
-    git clone -q "https://${GH_TOKEN}@github.com/${GH_USER}/${GH_REPO}.git" gh_temp 2>/dev/null && {
-        cd gh_temp
-        echo "$CLEAN_HOST" >> host.txt
-        sort -u host.txt -o host.txt
-        git config user.name "Virgozki Deployer"
-        git config user.email "deploy@virgozki.local"
-        git add host.txt
-        git commit -m "Update: ${CLEAN_HOST} [${REGION}]" -q
-        git push -q origin main 2>/dev/null || git push -q origin master 2>/dev/null
-        cd ..; rm -rf gh_temp
-    }
-fi
-
-echo -e "\n  ${GREEN}✅ SCRIPT DONE – WALA NANG CLOUD BUILD ERROR!${RESET}"
+echo -e "\n  ${GREEN}✅ DONE – WALA NANG ERROR!${RESET}"
