@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# VIRGOZKI PANEL • AUTO-DETECT + NUMBERED REGION SELECT
+# VIRGOZKI PANEL • MANUAL REGION SELECT ONLY
 # ALL REGIONS WITH COUNTRY • XHTTP FIXED • HTTPUPGRADE INTACT
 # FULLY COMPATIBLE WITH CLOUD RUN / OPENRESTY / XRAY
 # ==============================================================================
@@ -65,7 +65,7 @@ clear
 echo ""
 echo -e "  ${BOLD}${WHITE}VIRGOZKI PANEL (QWIKLABS OPTIMIZED)${RESET}"
 echo -e "  ${MAGENTA}MADE BY VIRGOZKI${RESET}"
-echo -e "  ${GREEN}✅ AUTO-DETECT + MANUAL SELECT • ALL REGIONS • XHTTP FIXED${RESET}"
+echo -e "  ${GREEN}✅ MANUAL REGION SELECT ONLY • ALL REGIONS • XHTTP FIXED${RESET}"
 echo ""
 
 PROJECT_ID=$(gcloud config get-value project 2>/dev/null | tr -d '[:space:]')
@@ -74,49 +74,38 @@ if [ -z "$PROJECT_ID" ]; then
     exit 1
 fi
 echo -e "  ${CYAN}PROJECT: ${GREEN}${PROJECT_ID}${RESET}"
-
-# ==============================================
-# 🧠 AUTO-DETECT REGION
-# ==============================================
-echo -ne "  ${CYAN}🔍 DETECTING CURRENT REGION... ${RESET}"
-REGION=$(gcloud config get-value compute/region 2>/dev/null | tr -d '[:space:]')
-[ -z "$REGION" ] && REGION=$(gcloud config get-value run/region 2>/dev/null | tr -d '[:space:]')
-[ -z "$REGION" ] && REGION=$(gcloud run regions list --format="value(REGION)" --limit=1 2>/dev/null | tr -d '[:space:]')
-[ -z "$REGION" ] && REGION="asia-southeast1"
-echo -e "${GREEN}${REGION}${RESET}"
 echo ""
 
 # ==============================================
-# 🔢 MANUAL SELECTION MENU (NUMBERED REGIONS)
+# 🔢 MANUAL SELECTION MENU (WALANG AUTO-DETECT)
 # ==============================================
-echo -e "  ${CYAN}📋 PUMILI NG REGION (0 = GAMITIN ANG NA-DETECT):${RESET}"
-echo -e "  ${YELLOW}0) ${GREEN}${REGION} ${CYAN}(Auto-Detected) ✅${RESET}"
-echo ""
+echo -e "  ${CYAN}📋 PUMILI NG REGION:${RESET}"
 for i in "${!ALL_REGIONS[@]}"; do
   IFS=':' read -r num reg_name country <<< "${ALL_REGIONS[$i]}"
   printf "  ${YELLOW}%s) ${GREEN}%-25s ${CYAN}(%s)${RESET}\n" "$num" "$reg_name" "$country"
 done
 echo ""
-read -r -p "$(echo -e "  ${CYAN}ILAGAY ANG NUMBER: ${RESET}")" REG_CHOICE
+read -r -p "$(echo -e "  ${CYAN}ILAGAY ANG NUMBER NG REGION: ${RESET}")" REG_CHOICE
 
-# I-apply ang napiling region
-if [[ "$REG_CHOICE" =~ ^[0-9]+$ ]]; then
-  FOUND=0
-  for item in "${ALL_REGIONS[@]}"; do
-    IFS=':' read -r num reg_name _ <<< "$item"
-    if [ "$num" = "$REG_CHOICE" ]; then
-      REGION="$reg_name"
-      gcloud config set run/region "$REGION" --quiet 2>/dev/null
-      gcloud config set compute/region "$REGION" --quiet 2>/dev/null
-      FOUND=1
-      break
-    fi
-  done
-  if [ "$FOUND" -eq 0 ] && [ "$REG_CHOICE" != "0" ]; then
-    echo -e "  ${YELLOW}⚠️ INVALID NUMBER – GAMITIN ANG NA-DETECT${RESET}"
+# Kunin ang napiling region
+REGION=""
+for item in "${ALL_REGIONS[@]}"; do
+  IFS=':' read -r num reg_name _ <<< "$item"
+  if [ "$num" = "$REG_CHOICE" ]; then
+    REGION="$reg_name"
+    gcloud config set run/region "$REGION" --quiet 2>/dev/null
+    gcloud config set compute/region "$REGION" --quiet 2>/dev/null
+    break
   fi
+done
+
+# Kung mali ang input
+if [ -z "$REGION" ]; then
+  echo -e "  ${RED}❌ INVALID NUMBER! PAKI ULIT ANG PAGPILI.${RESET}"
+  exit 1
 fi
-echo -e "  ${CYAN}✅ FINAL REGION: ${GREEN}${REGION}${RESET}"
+
+echo -e "  ${CYAN}✅ PINILING REGION: ${GREEN}${REGION}${RESET}"
 echo ""
 
 # ==============================================
