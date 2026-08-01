@@ -12,7 +12,7 @@
             --text-secondary: rgba(255, 255, 255, 0.7);
             --accent: #93c5fd;
             --success: #6ee7b7;
-            --bg-fallback: #050b18; /* Malalim na kulay habang naglo-load */
+            --bg-fallback: #050b18;
         }
 
         * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent;}
@@ -26,7 +26,6 @@
             background: var(--bg-fallback);
         }
 
-        /* MAIN BACKGROUND */
         #bg-video {
             position: fixed;
             top: 0;
@@ -57,7 +56,6 @@
             z-index: 1;
         }
 
-        /* ✅ STATUS CARD — WALANG BACKGROUND */
         .vpn-status-card {
             background: transparent;
             border: 1px solid var(--border);
@@ -99,7 +97,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 8px;
         }
-        /* ✅ INFO BOX — WALANG BACKGROUND */
         .info-box {
             background: transparent;
             border: 1px solid var(--border);
@@ -122,7 +119,6 @@
         }
         .info-value.success {color: var(--success);}
 
-        /* ✅ SECTION — WALANG BACKGROUND */
         .section {
             background: transparent;
             border: 1px solid var(--border);
@@ -188,7 +184,7 @@
         .config-text {
             width: 100%; min-height: 80px;
             padding: 12px; padding-top: 32px;
-            background: rgba(0,0,0,0.05); /* Sobrang manipis na lang */
+            background: rgba(0,0,0,0.05);
             border: 1px solid var(--border); border-radius: 6px;
             color: var(--success);
             font-family: 'Consolas', monospace; font-size: 11px; line-height: 1.4;
@@ -204,12 +200,11 @@
         }
         .copy-btn:hover {background: rgba(147, 197, 253, 0.06);}
 
-        /* ✅ FLOATING PLAYER — TOTALLY TRANSPARENT */
         #floating-player {
             position: fixed;
             top: 18px; left: 18px;
             width: 250px;
-            background: transparent; /* WALANG BACKGROUND */
+            background: transparent;
             border: 1px solid var(--border-accent); border-radius: 12px;
             padding: 12px; z-index: 99999; user-select: none;
         }
@@ -225,10 +220,9 @@
         .p-btn {width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; font-size: 14px;}
         .p-btn:hover {background: rgba(147,197,253,0.06);}
 
-        /* ✅ MODAL — ZERO TRANSPARENT, WALANG BLUR */
         .modal {
             position: fixed; top:0; left:0; width:100%; height:100%;
-            background: transparent; /* WALANG SAPIN */
+            background: transparent;
             z-index: 99999; display: none; flex-direction: column; padding: 16px; overflow: hidden;
         }
         .modal-bg-video {
@@ -240,7 +234,7 @@
         .modal-list {flex:1; overflow-y: auto; margin-top: 10px; position: relative; z-index: 1;}
         .modal-item {
             padding: 10px 14px; margin-bottom: 5px;
-            background: transparent; /* WALANG BACKGROUND ANG LISTAHAN */
+            background: transparent;
             border: 1px solid var(--border); border-radius: 6px;
             cursor: pointer; font-size: 13px; transition: all 0.2s; color: var(--text);
         }
@@ -252,7 +246,6 @@
             color: var(--accent); cursor: pointer; text-align: center; margin-top: 8px; font-weight: 600; font-size: 13px; position: relative; z-index: 1;
         }
 
-        /* ✅ LOADING SCREEN */
         #loading-screen {
             position: fixed; top:0; left:0; width:100%; height:100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -281,13 +274,11 @@
 </head>
 <body>
 
-<!-- MAIN BACKGROUND VIDEO -->
 <video id="bg-video" autoplay muted loop playsinline preload="auto">
     <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&st=ekb8hc0g&dl=1" type="video/mp4">
 </video>
 <div class="bg-overlay"></div>
 
-<!-- LOADING SCREEN -->
 <div id="loading-screen">
     <video class="loading-bg-video" autoplay muted loop playsinline preload="auto">
         <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&st=a7hso75q&dl=1" type="video/mp4">
@@ -425,7 +416,6 @@
         'ajax.googleapis.com', 'help.iwanttfc.com', 'support.iwanttfc.com', 'api.iwanttfc.com'
     ];
 
-    // ✅ MUSIC PLAYER — MAY ERROR FALLBACK
     const audio = new Audio();
     audio.volume = 0.7;
     audio.preload = 'metadata';
@@ -535,7 +525,7 @@
     function prevSong() { currentSongIndex = (currentSongIndex-1+songs.length)%songs.length; loadSong(currentSongIndex); if(isPlaying) audio.play().catch(e=>{}); }
     function stopMusic() { audio.pause(); audio.currentTime=0; isPlaying=false; playBtn.textContent='▶'; }
 
-    // ✅ CONFIG GENERATOR — WALANG ERROR
+    // ✅ TAMA NA — TATLO LANG ANG GINALAWAN PARA SA XHTTP
     function buildConfig() {
         const addr=selectedAddress, sni=selectedSNI, host=currentHost, path=PATHS[selectedProtocol][selectedTransport];
         let transportParam = '';
@@ -546,12 +536,25 @@
         }
 
         switch(selectedProtocol){
+            // VLESS-XHTTP LANG ANG NAGBAGO
             case 'vless': 
-                return `vless://${UUID}@${addr}:443?encryption=none&${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=http%2F1.1#VLESS-${selectedTransport.toUpperCase()}-VIRGOZKI`;
+                if(selectedTransport === 'xhttp'){
+                    return `vless://${UUID}@${addr}:443?encryption=none&${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=h2%2Chttp%2F1.1#VLESS-XHTTP-VIRGOZKI`;
+                } else {
+                    return `vless://${UUID}@${addr}:443?encryption=none&${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=http%2F1.1#VLESS-${selectedTransport.toUpperCase()}-VIRGOZKI`;
+                }
+            // TROJAN-XHTTP LANG ANG NAGBAGO
             case 'trojan': 
-                return `trojan://${SS_PASSWORD}@${addr}:443?${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=http%2F1.1#TROJAN-${selectedTransport.toUpperCase()}-VIRGOZKI`;
+                if(selectedTransport === 'xhttp'){
+                    return `trojan://${SS_PASSWORD}@${addr}:443?${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=h2%2Chttp%2F1.1#TROJAN-XHTTP-VIRGOZKI`;
+                } else {
+                    return `trojan://${SS_PASSWORD}@${addr}:443?${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=http%2F1.1#TROJAN-${selectedTransport.toUpperCase()}-VIRGOZKI`;
+                }
+            // VMESS-XHTTP LANG ANG NAGBAGO
             case 'vmess': 
-                return `vmess://${btoa(JSON.stringify({v:'2',ps:`VMESS-${selectedTransport.toUpperCase()}-VIRGOZKI`,add:addr,port:'443',id:UUID,aid:'0',scy:'auto',net:selectedTransport,host:host,path:path,tls:'tls',sni:sni,fp:'chrome',alpn:'http/1.1'})).replace(/=+$/,'')}`;
+                let alpnVal = selectedTransport === 'xhttp' ? 'h2,http/1.1' : 'http/1.1';
+                return `vmess://${btoa(JSON.stringify({v:'2',ps:`VMESS-${selectedTransport.toUpperCase()}-VIRGOZKI`,add:addr,port:'443',id:UUID,aid:'0',scy:'auto',net:selectedTransport,host:host,path:path,tls:'tls',sni:sni,fp:'chrome',alpn:alpnVal})).replace(/=+$/,'')}`;
+            // SHADOWSOCKS — WALANG PINAGBAGO
             case 'shadowsocks': 
                 const ssCred = btoa(`${SS_METHOD}:${SS_PASSWORD}`).replace(/=+$/,'');
                 return `ss://${ssCred}@${addr}:443?${transportParam}&security=tls&sni=${sni}#SS-${selectedTransport.toUpperCase()}-VIRGOZKI`;
