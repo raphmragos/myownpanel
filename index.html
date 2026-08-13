@@ -15,6 +15,8 @@
             --warning: #fcd34d;
             --error: #f87171;
             --bg-fallback: #050b18;
+            /* 🆕 Solid fallback background */
+            --bg-solid: linear-gradient(135deg, #050b18 0%, #1a2b48 50%, #050b18 100%);
         }
 
         * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent;}
@@ -25,7 +27,7 @@
             padding: 16px 12px;
             position: relative;
             overflow-x: hidden;
-            background: var(--bg-fallback);
+            background: var(--bg-solid);
         }
 
         #bg-video {
@@ -36,7 +38,7 @@
             height: 100vh;
             object-fit: cover;
             z-index: -2;
-            background: var(--bg-fallback);
+            display: block;
         }
         .bg-overlay {
             position: fixed;
@@ -44,7 +46,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: transparent;
+            background: rgba(5, 11, 24, 0); /* ✅ SET TO ZERO TRANSPARENCY */
             z-index: -1;
         }
 
@@ -87,7 +89,7 @@
         .info-value {font-size: 13px; font-weight: 600; color: var(--accent); word-break: break-all;}
         .info-value.success {color: var(--success);}
 
-        /* 🆕 MONITOR BOX - LAHAT NANDITO SA ISANG KAHON */
+        /* MONITOR BOX */
         .monitor-box {
             background: transparent; border: 1px solid var(--border-accent); border-radius: 10px; padding: 12px;
         }
@@ -97,17 +99,17 @@
             display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
         }
         .monitor-item {
-            padding: 8px; border-radius: 6px; background: rgba(0,0,0,0.1); border: 1px solid var(--border);
+            padding: 8px; border-radius: 6px; background: rgba(0,0,0,0); /* ✅ SET TO ZERO */ border: 1px solid var(--border);
         }
         .monitor-item-label {font-size: 9px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px;}
         .monitor-item-value {font-size: 12px; font-weight: 600; color: var(--accent); word-break: break-all;}
         .monitor-item-value.success {color: var(--success);}
         .monitor-item-value.error {color: var(--error);}
         .monitor-item-value.warning {color: var(--warning);}
-        /* 📊 MALIIT LANG NA GRAPH */
+        /* MINI GRAPH */
         .mini-graph-wrapper {
             width: 100%; height: 70px; border-radius: 6px; overflow: hidden;
-            background: rgba(0,0,0,0.1); border: 1px solid var(--border);
+            background: rgba(0,0,0,0); /* ✅ SET TO ZERO */ border: 1px solid var(--border);
         }
         .mini-graph-canvas {width: 100%; height: 100%; display: block;}
         .graph-note {font-size: 9px; color: var(--text-secondary); text-align: center; margin-top: 4px;}
@@ -134,7 +136,7 @@
         .config-box {position: relative; margin-top: 8px;}
         .config-text {
             width: 100%; min-height: 80px; padding: 12px; padding-top: 32px;
-            background: rgba(0,0,0,0.05); border: 1px solid var(--border); border-radius: 6px;
+            background: rgba(0,0,0,0); /* ✅ SET TO ZERO */ border: 1px solid var(--border); border-radius: 6px;
             color: var(--success); font-family: 'Consolas', monospace; font-size: 11px; line-height: 1.4;
             resize: none; overflow-x: hidden;
         }
@@ -145,49 +147,51 @@
         }
         .copy-btn:hover {background: rgba(147,197,253,0.06);}
 
+        /* ✅ PINALIIT NA HUSTO ANG MUSIC PLAYER */
         #floating-player {
-            position: fixed; top: 18px; left: 18px; width: 250px; background: transparent;
-            border: 1px solid var(--border-accent); border-radius: 12px; padding: 12px; z-index: 99999; user-select: none;
+            position: fixed; top: 10px; left: 10px; width: 140px; background: rgba(5,11,24,0.7);
+            border: 1px solid var(--border-accent); border-radius: 8px; padding: 6px; z-index: 99999; user-select: none;
+            backdrop-filter: blur(4px);
         }
         .player-drag-handle {
-            width: 100%; padding: 4px 0; margin-bottom: 8px; cursor: grab; display: flex; align-items: center; justify-content: center; gap: 6px;
+            width: 100%; padding: 2px 0; margin-bottom: 4px; cursor: grab; display: flex; align-items: center; justify-content: center; gap: 3px;
             border-bottom: 1px solid rgba(147,197,253,0.2);
         }
         .player-drag-handle:active {cursor: grabbing;}
-        .drag-text {font-size: 11px; color: var(--accent); font-weight: 500;}
-        .player-title {font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 8px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-        .player-controls {display: flex; gap: 10px; justify-content: center;}
+        .drag-text {font-size: 8px; color: var(--accent); font-weight: 500;}
+        .player-title {font-size: 9px; font-weight: 600; color: var(--accent); margin-bottom: 5px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .player-controls {display: flex; gap: 4px; justify-content: center;}
         .p-btn {
-            width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--accent);
+            width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--accent);
             background: transparent; color: var(--accent); cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center; font-size: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
         }
         .p-btn:hover {background: rgba(147,197,253,0.06);}
 
         .modal {
-            position: fixed; top:0; left:0; width:100%; height:100%; background: transparent;
+            position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-solid);
             z-index: 99999; display: none; flex-direction: column; padding: 16px; overflow: hidden;
         }
-        .modal-bg-video {position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: -1; background: var(--bg-fallback);}
+        .modal-bg-video {position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: -1; display: block;}
         .modal.show {display: flex;}
         .modal-list {flex:1; overflow-y: auto; margin-top: 10px; position: relative; z-index: 1;}
         .modal-item {
-            padding: 10px 14px; margin-bottom: 5px; background: transparent; border: 1px solid var(--border);
+            padding: 10px 14px; margin-bottom: 5px; background: rgba(0,0,0,0); /* ✅ SET TO ZERO */ border: 1px solid var(--border);
             border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; color: var(--text);
         }
         .modal-item:hover, .modal-item.selected {border-color: var(--border-accent); background: rgba(147,197,253,0.06);}
         .modal-close {
-            padding: 7px; background: transparent; border: 1px solid var(--border-accent); border-radius: 6px;
+            padding: 7px; background: rgba(0,0,0,0); /* ✅ SET TO ZERO */ border: 1px solid var(--border-accent); border-radius: 6px;
             color: var(--accent); cursor: pointer; text-align: center; margin-top: 8px; font-weight: 600; font-size: 13px; position: relative; z-index: 1;
         }
 
         #loading-screen {
             position: fixed; top:0; left:0; width:100%; height:100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: var(--bg-fallback); z-index: 999999; overflow: hidden; transition: opacity 0.5s ease;
+            background: var(--bg-solid); z-index: 999999; overflow: hidden; transition: opacity 0.5s ease;
         }
         #loading-screen.hidden {opacity: 0; pointer-events: none;}
-        .loading-bg-video {position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: -2; background: var(--bg-fallback);}
-        .loading-overlay {position: absolute; top:0; left:0; width:100%; height:100%; background: transparent; z-index: -1;}
+        .loading-bg-video {position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: -2; display: block;}
+        .loading-overlay {position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(5,11,24,0); /* ✅ SET TO ZERO */ z-index: -1;}
         .load-text {font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 6px; position: relative; z-index: 1;}
         .load-sub {font-size: 13px; color: var(--text-secondary); position: relative; z-index: 1;}
         .loader-spinner {width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 15px 0;}
@@ -197,13 +201,13 @@
 <body>
 
 <video id="bg-video" autoplay muted loop playsinline preload="auto">
-    <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&st=ekb8hc0g&dl=1" type="video/mp4">
+    <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&dl=1" type="video/mp4">
 </video>
 <div class="bg-overlay"></div>
 
 <div id="loading-screen">
     <video class="loading-bg-video" autoplay muted loop playsinline preload="auto">
-        <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&st=a7hso75q&dl=1" type="video/mp4">
+        <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&dl=1" type="video/mp4">
     </video>
     <div class="loading-overlay"></div>
     <div class="load-text">VIRGOZKI PANEL</div>
@@ -241,7 +245,6 @@
         </div>
     </div>
 
-    <!-- 🆕 LAHAT NG MONITOR FEATURES NASA ISANG KAHON -->
     <div class="monitor-box">
         <div class="monitor-header">
             <div class="monitor-title">📊 REAL-TIME SERVER MONITOR</div>
@@ -274,11 +277,10 @@
             </div>
         </div>
 
-        <!-- 📊 MALIIT LANG NA GRAPH -->
         <div class="mini-graph-wrapper">
             <canvas id="mini-ping-graph" class="mini-graph-canvas"></canvas>
         </div>
-        <div class="graph-note">📈 PING SA NAKARAANG 5 MINUTO</div>
+        <div class="graph-note">📈 PING HAPPY NA YAN</div>
     </div>
 
     <div class="section">
@@ -314,7 +316,7 @@
 
 <div id="floating-player">
     <div class="player-drag-handle">
-        <span class="drag-text">⋮⋮ MOVE/ILIPAT ITO</span>
+        <span class="drag-text">⋮⋮ ILIPAT</span>
     </div>
     <div class="player-title" id="song-name">NEFFEX - Control</div>
     <div class="player-controls">
@@ -326,8 +328,8 @@
 </div>
 
 <div class="modal" id="address-modal">
-    <video class="modal modal-bg-video" autoplay muted loop playsinline preload="auto">
-        <source src="https://dl.dropboxusercontent.com/scl/fi/d2c75kh83416h0nd94aub/ssstik.io_-ai_inkdreams_1785391156354.mp4?rlkey=nv0yf6qlx47ar2mdqg4k7ouuw&st=rdfwok7e&dl=1" type="video/mp4">
+    <video class="modal-bg-video" autoplay muted loop playsinline preload="auto">
+        <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&dl=1" type="video/mp4">
     </video>
     <div class="section-title">🔌 PUMILI NG ADDRESS</div>
     <div class="modal-list" id="address-list"></div>
@@ -335,7 +337,7 @@
 </div>
 <div class="modal" id="sni-modal">
     <video class="modal-bg-video" autoplay muted loop playsinline preload="auto">
-        <source src="https://dl.dropboxusercontent.com/scl/fi/d2c75kh83416h0nd94aub/ssstik.io_-ai_inkdreams_1785391156354.mp4?rlkey=nv0yf6qlx47ar2mdqg4k7ouuw&st=rdfwok7e&dl=1" type="video/mp4">
+        <source src="https://dl.dropboxusercontent.com/scl/fi/4ow0wjnznaf03cv12qkfb/ssstik.io_-ikoppie_1785393023125.mp4?rlkey=o9je28ockyfobm4243vu0un5s&dl=1" type="video/mp4">
     </video>
     <div class="section-title">🛡️ PUMILI NG SNI</div>
     <div class="modal-list" id="sni-list"></div>
@@ -387,16 +389,16 @@
     audio.volume = 0.7;
     audio.preload = 'metadata';
     const songs = [
-        { name: 'NEFFEX - Control', url: 'https://dl.dropboxusercontent.com/scl/fi/5qeqe89ibmyikcj7dmgie/NEFFEX-Control-Official-Lyric-Video-Copyright-Free-No.242-MP3_160K.mp3?rlkey=8mec522bb0mycbgeiw3b2p1st&st=n3xggf1g&raw=1' },
-        { name: 'NEFFEX - Crown', url: 'https://dl.dropboxusercontent.com/scl/fi/z4sbip8lthzy5piuolpn2/NEFFEX-Crown-Copyright-Free-No.15-MP3_160K.mp3?rlkey=7gf528zikfyrxeav2blxh2ixl&st=b3diiygv&raw=1' },
-        { name: 'NEFFEX - Fight Back', url: 'https://dl.dropboxusercontent.com/scl/fi/3pjn86px04k8mq7q5q3h6/NEFFEX-Fight-Back-Official-Video-No.37-MP3_160K.mp3?rlkey=k1j7x2woagxujekwxano6n4ge&st=bcl0xd7o&raw=1' },
-        { name: 'NEFFEX - Purpose', url: 'https://dl.dropboxusercontent.com/scl/fi/ixhlx1kiw3gqnij817rz7/NEFFEX-Purpose-Copyright-Free-No.177-MP3_160K.mp3?rlkey=civmcmnzols7yy2b64dduiq8y&st=j6kqivoc&raw=1' },
-        { name: 'NEFFEX - Rumors', url: 'https://dl.dropboxusercontent.com/scl/fi/6trrxr9mcu9mhbl061dkj/NEFFEX-Rumors-Lyrics-MP3_160K.mp3?rlkey=fh14ss4axvmt4up01c467nrxk&st=dvsyyzsd&raw=1' },
-        { name: 'NEFFEX - Best of Me', url: 'https://dl.dropboxusercontent.com/scl/fi/rypimhnwa3f0sc7becgz8/NEFFEX-Best-of-Me-Copyright-Free-No.23-MP3_160K.mp3?rlkey=l6fqcjlklv2f08g8v9du23fb3&st=nguyidh9&raw=1' },
-        { name: 'NEFFEX - Chance', url: 'https://dl.dropboxusercontent.com/scl/fi/cyxhytondpo74u1mbqdl5/NEFFEX-Chance-Copyright-Free-No.65-MP3_160K.mp3?rlkey=ha1km8kbvg6f8va6sozefdw96&st=v0eg4i31&raw=1' },
-        { name: 'NEFFEX - Cold', url: 'https://dl.dropboxusercontent.com/scl/fi/3sxfjqb6ph9tfv6k1cz0h/NEFFEX-Cold-Copyright-Free-No.60-MP3_160K.mp3?rlkey=2wxp3ofoq9v26vxd9fh3iq9er&st=ghcd60wa&raw=1' },
-        { name: 'NEFFEX - Grateful', url: 'https://dl.dropboxusercontent.com/scl/fi/v5419s2y2klq6ookxpzrd/NEFFEX-Grateful-Copyright-Free-No.54-MP3_160K.mp3?rlkey=6to3htylrlnxsru26ik2neds1&st=q47h5sgq&raw=1' },
-        { name: 'NEFFEX - Life', url: 'https://dl.dropboxusercontent.com/scl/fi/uw1f789tb9v4i2k4xyw42/NEFFEX-Life-Copyright-Free-No.42-MP3_160K.mp3?rlkey=y9y56c3ui6f8kx8ar6l2f9pzv&st=9sgmxut6&raw=1' }
+        { name: 'NEFFEX - Control', url: 'https://dl.dropboxusercontent.com/scl/fi/5qeqe89ibmyikcj7dmgie/NEFFEX-Control-Official-Lyric-Video-Copyright-Free-No.242-MP3_160K.mp3?rlkey=8mec522bb0mycbgeiw3b2p1st&dl=1' },
+        { name: 'NEFFEX - Crown', url: 'https://dl.dropboxusercontent.com/scl/fi/z4sbip8lthzy5piuolpn2/NEFFEX-Crown-Copyright-Free-No.15-MP3_160K.mp3?rlkey=7gf528zikfyrxeav2blxh2ixl&dl=1' },
+        { name: 'NEFFEX - Fight Back', url: 'https://dl.dropboxusercontent.com/scl/fi/3pjn86px04k8mq7q5q3h6/NEFFEX-Fight-Back-Official-Video-No.37-MP3_160K.mp3?rlkey=k1j7x2woagxujekwxano6n4ge&dl=1' },
+        { name: 'NEFFEX - Purpose', url: 'https://dl.dropboxusercontent.com/scl/fi/ixhlx1kiw3gqnij817rz7/NEFFEX-Purpose-Copyright-Free-No.177-MP3_160K.mp3?rlkey=civmcmnzols7yy2b64dduiq8y&dl=1' },
+        { name: 'NEFFEX - Rumors', url: 'https://dl.dropboxusercontent.com/scl/fi/6trrxr9mcu9mhbl061dkj/NEFFEX-Rumors-Lyrics-MP3_160K.mp3?rlkey=fh14ss4axvmt4up01c467nrxk&dl=1' },
+        { name: 'NEFFEX - Best of Me', url: 'https://dl.dropboxusercontent.com/scl/fi/rypimhnwa3f0sc7becgz8/NEFFEX-Best-of-Me-Copyright-Free-No.23-MP3_160K.mp3?rlkey=l6fqcjlklv2f08g8v9du23fb3&dl=1' },
+        { name: 'NEFFEX - Chance', url: 'https://dl.dropboxusercontent.com/scl/fi/cyxhytondpo74u1mbqdl5/NEFFEX-Chance-Copyright-Free-No.65-MP3_160K.mp3?rlkey=ha1km8kbvg6f8va6sozefdw96&dl=1' },
+        { name: 'NEFFEX - Cold', url: 'https://dl.dropboxusercontent.com/scl/fi/3sxfjqb6ph9tfv6k1cz0h/NEFFEX-Cold-Copyright-Free-No.60-MP3_160K.mp3?rlkey=2wxp3ofoq9v26vxd9fh3iq9er&dl=1' },
+        { name: 'NEFFEX - Grateful', url: 'https://dl.dropboxusercontent.com/scl/fi/v5419s2y2klq6ookxpzrd/NEFFEX-Grateful-Copyright-Free-No.54-MP3_160K.mp3?rlkey=6to3htylrlnxsru26ik2neds1&dl=1' },
+        { name: 'NEFFEX - Life', url: 'https://dl.dropboxusercontent.com/scl/fi/uw1f789tb9v4i2k4xyw42/NEFFEX-Life-Copyright-Free-No.42-MP3_160K.mp3?rlkey=y9y56c3ui6f8kx8ar6l2f9pzv&dl=1' }
     ];
     let currentSongIndex = 0, isPlaying = false;
 
@@ -443,7 +445,7 @@
     let latencyHistory = [];
     let serverStartTime = Date.now();
 
-    // 🎵 DRAG & MUSIC FUNCTIONS - WALANG PINAGBAGO
+    // DRAG & MUSIC FUNCTIONS - WALANG PINAGBAGO SA LOGIC
     dragHandle.addEventListener('mousedown', e => {
         isDragging = true;
         offsetX = e.clientX - player.getBoundingClientRect().left;
@@ -508,7 +510,7 @@
     function prevSong() { currentSongIndex = (currentSongIndex-1+songs.length)%songs.length; loadSong(currentSongIndex); if(isPlaying) audio.play().catch(e=>{}); }
     function stopMusic() { audio.pause(); audio.currentTime=0; isPlaying=false; playBtn.textContent='▶'; }
 
-    // ⚙️ CONFIG GENERATOR - WALANG PINAGBAGO
+    // CONFIG GENERATOR - WALANG PINAGBAGO
     function buildConfig() {
         const addr=selectedAddress, sni=selectedSNI, host=currentHost, path=PATHS[selectedProtocol][selectedTransport];
         let transportParam = '';
@@ -569,7 +571,7 @@
         });
     }
 
-    // 📊 MALIIT NA GRAPH RENDER
+    // MINI GRAPH RENDER - WALANG PINAGBAGO
     function renderMiniGraph() {
         const w = miniGraphCanvas.width = miniGraphCanvas.offsetWidth * 2;
         const h = miniGraphCanvas.height = miniGraphCanvas.offsetHeight * 2;
@@ -597,7 +599,7 @@
         miniGraphCtx.lineWidth = 1.5; miniGraphCtx.stroke();
     }
 
-    // ⏱️ SERVER UPTIME CALCULATION
+    // SERVER UPTIME - WALANG PINAGBAGO
     function updateServerUptime() {
         const diffMs = Date.now() - serverStartTime;
         const days = Math.floor(diffMs / 86400000);
@@ -613,7 +615,7 @@
         serverUptimeEl.textContent = uptimeStr;
     }
 
-    // 📡 KUNIN ANG IP AT LOKASYON NG USER
+    // KUNIN IP - WALANG PINAGBAGO
     async function fetchUserLocation() {
         try {
             const res = await fetch('https://ipapi.co/json/');
@@ -628,7 +630,7 @@
         }
     }
 
-    // 🩺 SERVER STATUS & PING CHECK
+    // SERVER CHECK - WALANG PINAGBAGO
     async function checkServerStatus() {
         const t1 = performance.now();
         const testUrl = `https://${selectedAddress}:443?${Date.now()}`;
@@ -655,8 +657,8 @@
             mainStatusCard.className = 'vpn-status-card connected';
             mainStatusIcon.className = 'status-indicator connected';
             mainStatusIcon.textContent = '✓';
-            mainStatusText.textContent = 'KONEKTADO';
-            mainStatusDesc.textContent = 'Server ay tumutugon nang maayos';
+            mainStatusText.textContent = 'CONNECTED';
+            mainStatusDesc.textContent = 'Server Not Response';
             serverStatusEl.textContent = 'ONLINE';
             serverStatusEl.className = 'monitor-item-value success';
             pingValueEl.textContent = `${ping} ms`;
@@ -705,7 +707,7 @@
         startMonitor();
     }
 
-    // 🚀 SIMULA NG LAHAT NG FUNCTIONS
+    // SIMULA - WALANG PINAGBAGO
     window.addEventListener('load',()=>{
         setTimeout(()=>{
             loadingScreen.classList.add('hidden');
@@ -716,13 +718,11 @@
             buildOptions(protoButtons, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, v=>{selectedProtocol=v;});
             buildOptions(transButtons, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, v=>{selectedTransport=v;});
             
-            // Modal open/close events
             addressBtn.addEventListener('click', ()=>addressModal.classList.add('show'));
             addressClose.addEventListener('click', ()=>addressModal.classList.remove('show'));
             sniBtn.addEventListener('click', ()=>sniModal.classList.add('show'));
             sniClose.addEventListener('click', ()=>sniModal.classList.remove('show'));
 
-            // Music controls
             playBtn.addEventListener('click', ()=>{
                 if(isPlaying){ audio.pause(); isPlaying=false; playBtn.textContent='▶'; }
                 else { togglePlay(); }
@@ -736,13 +736,13 @@
             // Copy config
             copyBtn.addEventListener('click', ()=>{
                 navigator.clipboard.writeText(configDisplay.value).then(()=>{
-                    copyBtn.textContent='✓ NAKOPYA!';
-                    setTimeout(()=>copyBtn.textContent='Kopyahin',2000);
+                    copyBtn.textContent='✓ READY TO PASTE!';
+                    setTimeout(()=>copyBtn.textContent='COPY',2000);
                 }).catch(()=>{
                     configDisplay.select();
                     document.execCommand('copy');
-                    copyBtn.textContent='✓ NAKOPYA!';
-                    setTimeout(()=>copyBtn.textContent='Kopyahin',2000);
+                    copyBtn.textContent='✓ READY TO PASTE!';
+                    setTimeout(()=>copyBtn.textContent='COPY',2000);
                 });
             });
 
@@ -755,3 +755,4 @@
 </script>
 </body>
 </html>
+
