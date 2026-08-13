@@ -89,6 +89,26 @@
         .info-value {font-size: 13px; font-weight: 600; color: var(--accent); word-break: break-all;}
         .info-value.success {color: var(--success);}
 
+        /* SYSTEM LOG BOX */
+        .system-log-box {
+            background: transparent; border: 1px solid var(--border-accent); border-radius: 10px; padding: 12px;
+        }
+        .log-header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;}
+        .log-title {font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 5px;}
+        .log-clear {font-size: 11px; color: var(--accent); cursor: pointer; transition: all 0.2s;}
+        .log-clear:hover {color: var(--success);}
+        .log-content {
+            width: 100%; min-height: 90px; max-height: 120px; overflow-y: auto;
+            background: rgba(0,0,0,0); border: 1px solid var(--border); border-radius: 6px; padding: 8px;
+            font-family: 'Consolas', monospace; font-size: 10px; line-height: 1.5; color: var(--text-secondary);
+        }
+        .log-line {margin-bottom: 2px; word-break: break-all;}
+        .log-time {color: var(--accent); margin-right: 5px;}
+        .log-info {color: var(--text-secondary);}
+        .log-success {color: var(--success);}
+        .log-error {color: var(--error);}
+        .log-warning {color: var(--warning);}
+
         /* MONITOR BOX */
         .monitor-box {
             background: transparent; border: 1px solid var(--border-accent); border-radius: 10px; padding: 12px;
@@ -239,10 +259,15 @@
             <div class="info-label">TRANSPORT</div>
             <div class="info-value" id="info-transport">WebSocket</div>
         </div>
-        <div class="info-box full">
-            <div class="info-label">UPTIME</div>
-            <div class="info-value success" id="runtime-display">00:00:00</div>
+    </div>
+
+    <!-- SYSTEM LOG SECTION -->
+    <div class="system-log-box">
+        <div class="log-header">
+            <div class="log-title">📋 SYSTEM LOG</div>
+            <div class="log-clear" id="clear-log">Burahin Lahat</div>
         </div>
+        <div class="log-content" id="system-log-area"></div>
     </div>
 
     <div class="monitor-box">
@@ -408,7 +433,6 @@
     const infoSni = document.getElementById('info-sni');
     const infoProto = document.getElementById('info-proto');
     const infoTransport = document.getElementById('info-transport');
-    const runtimeDisplay = document.getElementById('runtime-display');
     const configDisplay = document.getElementById('config-display');
     const copyBtn = document.getElementById('copy-btn');
     const addressBtn = document.getElementById('address-btn');
@@ -439,17 +463,40 @@
     const serverUptimeEl = document.getElementById('server-uptime');
     const miniGraphCanvas = document.getElementById('mini-ping-graph');
     const miniGraphCtx = miniGraphCanvas.getContext('2d');
+    const systemLogArea = document.getElementById('system-log-area');
+    const clearLogBtn = document.getElementById('clear-log');
 
     let isDragging = false, offsetX, offsetY;
     let monitorInterval = null;
     let latencyHistory = [];
     let serverStartTime = Date.now();
 
+    // ✅ NEW SYSTEM LOG FUNCTION
+    function addSystemLog(message, type = 'info') {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('tl-PH', { hour12: false });
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        
+        const typeClass = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : type === 'warning' ? 'log-warning' : 'log-info';
+        line.innerHTML = `<span class="log-time">[${timeStr}]</span> <span class="${typeClass}">${message}</span>`;
+        
+        systemLogArea.appendChild(line);
+        systemLogArea.scrollTop = systemLogArea.scrollHeight;
+    }
+
+    // Clear log
+    clearLogBtn.addEventListener('click', () => {
+        systemLogArea.innerHTML = '';
+        addSystemLog('Na-clear ang system log', 'info');
+    });
+
     // DRAG & MUSIC FUNCTIONS - WALANG PINAGBAGO SA LOGIC
     dragHandle.addEventListener('mousedown', e => {
         isDragging = true;
         offsetX = e.clientX - player.getBoundingClientRect().left;
         offsetY = e.clientY - player.getBoundingClientRect().top;
+        addSystemLog('Inilipat ang music player', 'info');
     });
     document.addEventListener('mousemove', e => {
         if (!isDragging) return;
@@ -471,6 +518,7 @@
         offsetX = t.clientX - player.getBoundingClientRect().left;
         offsetY = t.clientY - player.getBoundingClientRect().top;
         e.preventDefault();
+        addSystemLog('Inilipat ang music player (touch)', 'info');
     });
     document.addEventListener('touchmove', e => {
         if (!isDragging) return;
@@ -491,7 +539,9 @@
     function loadSong(i) { 
         songName.textContent = songs[i].name; 
         audio.src = songs[i].url;
+        addSystemLog(`Kantang na-load: ${songs[i].name}`, 'info');
         audio.onerror = () => {
+            addSystemLog(`⚠️ Hindi ma-play ang: ${songs[i].name} - lumilipat sa susunod`, 'warning');
             console.log("⚠️ Hindi ma-play ang kanta, lumilipat...");
             setTimeout(() => { if(currentSongIndex < songs.length-1) nextSong(); }, 1500);
         };
@@ -500,15 +550,17 @@
         audio.play().then(()=>{
             isPlaying = true; 
             playBtn.textContent = '⏸';
+            addSystemLog('Musikang nagsimula', 'success');
         }).catch(e=>{
+            addSystemLog('Hindi ma-play ang musika - pindutin ulit', 'warning');
             console.log("ℹ️ Pindutin ulit para mag-play:", e);
             isPlaying = false;
             playBtn.textContent = '▶';
         }); 
     }
-    function nextSong() { currentSongIndex = (currentSongIndex+1)%songs.length; loadSong(currentSongIndex); if(isPlaying) audio.play().catch(e=>{}); }
-    function prevSong() { currentSongIndex = (currentSongIndex-1+songs.length)%songs.length; loadSong(currentSongIndex); if(isPlaying) audio.play().catch(e=>{}); }
-    function stopMusic() { audio.pause(); audio.currentTime=0; isPlaying=false; playBtn.textContent='▶'; }
+    function nextSong() { currentSongIndex = (currentSongIndex+1)%songs.length; loadSong(currentSongIndex); if(isPlaying) audio.play().catch(e=>{}); addSystemLog('Lumipat sa susunod na kanta', 'info'); }
+    function prevSong() { currentSongIndex = (currentSongIndex-1+songs.length)%songs.length; loadSong(currentSongIndex); if(isPlaying) audio.play().catch(e=>{}); addSystemLog('Bumalik sa nakaraang kanta', 'info'); }
+    function stopMusic() { audio.pause(); audio.currentTime=0; isPlaying=false; playBtn.textContent='▶'; addSystemLog('Itinigil ang musika', 'info'); }
 
     // CONFIG GENERATOR - WALANG PINAGBAGO
     function buildConfig() {
@@ -542,18 +594,19 @@
         }
     }
 
-    function updateRuntime() {
-        const d=Math.floor(performance.now()/1000);
-        runtimeDisplay.textContent=[3600,60,1].map(t=>String(Math.floor(d/t)%60).padStart(2,'0')).join(':');
-    }
-
     function buildList(container, items, type) {
         container.innerHTML='';
         items.forEach(item=>{
             const el=document.createElement('div'); el.className='modal-item'; el.textContent=item;
             el.addEventListener('click',()=>{
-                if(type==='address'){ selectedAddress=item; addressSelected.textContent='Napili: '+item; addressBtn.textContent=item+' ▾'; addressModal.classList.remove('show'); }
-                else { selectedSNI=item; sniSelected.textContent='Napili: '+item; sniBtn.textContent=item+' ▾'; sniModal.classList.remove('show'); }
+                if(type==='address'){ 
+                    selectedAddress=item; addressSelected.textContent='Napili: '+item; addressBtn.textContent=item+' ▾'; addressModal.classList.remove('show'); 
+                    addSystemLog(`Napiling address: ${item}`, 'success');
+                }
+                else { 
+                    selectedSNI=item; sniSelected.textContent='Napili: '+item; sniBtn.textContent=item+' ▾'; sniModal.classList.remove('show'); 
+                    addSystemLog(`Napiling SNI: ${item}`, 'success');
+                }
                 updateUI();
             });
             container.appendChild(el);
@@ -566,6 +619,7 @@
             const b=document.createElement('button'); b.className='option-btn'+(i===sel?' active':''); b.textContent=lbl?lbl[i]:i;
             b.addEventListener('click',()=>{
                 container.querySelectorAll('.option-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); cb(i); updateUI();
+                addSystemLog(`Napiling ${type === 'proto' ? 'Protocol' : 'Transport'}: ${lbl[i]}`, 'info');
             });
             container.appendChild(b);
         });
@@ -618,140 +672,149 @@
     // KUNIN IP - WALANG PINAGBAGO
     async function fetchUserLocation() {
         try {
+            addSystemLog('Kinukuha ang iyong lokasyon...', 'info');
             const res = await fetch('https://ipapi.co/json/');
             const data = await res.json();
             userIpEl.textContent = data.ip || 'Hindi makuha';
             userCountryEl.textContent = data.country_name || 'Hindi makuha';
             userCityEl.textContent = data.city || 'Hindi makuha';
+            addSystemLog(`Lokasyon nakuha: ${data.city}, ${data.country_name} | IP: ${data.ip}`, 'success');
         } catch {
             userIpEl.textContent = 'Hindi makuha';
             userCountryEl.textContent = 'Hindi makuha';
             userCityEl.textContent = 'Hindi makuha';
+            addSystemLog('Hindi ma-kuha ang lokasyon at IP', 'error');
         }
     }
 
     // SERVER CHECK - WALANG PINAGBAGO
-    async function checkServerStatus() {
-        const t1 = performance.now();
-        const testUrl = `https://${selectedAddress}:443?${Date.now()}`;
-        let isOnline = false;
-        let ping = 999;
+async function checkServerStatus() {
+    const t1 = performance.now();
+    const testUrl = `https://${selectedAddress}:443?${Date.now()}`;
+    let isOnline = false;
+    let ping = 999;
 
-        try {
-            const ctrl = new AbortController();
-            const timeout = setTimeout(()=>ctrl.abort(), 3000);
-            await fetch(testUrl, {mode:'no-cors', signal:ctrl.signal});
-            clearTimeout(timeout);
-            ping = Math.round(performance.now() - t1);
-            isOnline = true;
-        } catch {
-            ping = Math.round(performance.now() - t1);
-            isOnline = false;
-        }
-
-        latencyHistory.push(ping);
-        if(latencyHistory.length > 12) latencyHistory.shift();
-        renderMiniGraph();
-
-        if(isOnline){
-            mainStatusCard.className = 'vpn-status-card connected';
-            mainStatusIcon.className = 'status-indicator connected';
-            mainStatusIcon.textContent = '✓';
-            mainStatusText.textContent = 'CONNECTED';
-            mainStatusDesc.textContent = 'HAPPY FREENET GUYS';
-            serverStatusEl.textContent = 'ONLINE';
-            serverStatusEl.className = 'monitor-item-value success';
-            pingValueEl.textContent = `${ping} ms`;
-            pingValueEl.className = ping < 150 ? 'monitor-item-value success' : ping < 300 ? 'monitor-item-value warning' : 'monitor-item-value error';
-        } else {
-            mainStatusCard.className = 'vpn-status-card disconnected';
-            mainStatusIcon.className = 'status-indicator disconnected';
-            mainStatusIcon.textContent = '✕';
-            mainStatusText.textContent = 'HINDI KAPA NAKA CONNECT';
-            mainStatusDesc.textContent = 'Pumili muna ng address at SNI';
-            serverStatusEl.textContent = 'OFFLINE';
-            serverStatusEl.className = 'monitor-item-value error';
-            pingValueEl.textContent = `${ping} ms`;
-            pingValueEl.className = 'monitor-item-value error';
-        }
-        updateServerUptime();
+    try {
+        const ctrl = new AbortController();
+        const timeout = setTimeout(()=>ctrl.abort(), 3000);
+        await fetch(testUrl, {mode:'no-cors', signal:ctrl.signal});
+        clearTimeout(timeout);
+        ping = Math.round(performance.now() - t1);
+        isOnline = true;
+    } catch {
+        ping = Math.round(performance.now() - t1);
+        isOnline = false;
     }
 
-    function startMonitor() {
-        if(monitorInterval) clearInterval(monitorInterval);
-        latencyHistory = [];
+    latencyHistory.push(ping);
+    if(latencyHistory.length > 12) latencyHistory.shift();
+    renderMiniGraph();
+
+    if(isOnline){
+        mainStatusCard.className = 'vpn-status-card connected';
+        mainStatusIcon.className = 'status-indicator connected';
+        mainStatusIcon.textContent = '✓';
+        mainStatusText.textContent = 'CONNECTED';
+        mainStatusDesc.textContent = 'HAPPY FREENET GUYS';
+        serverStatusEl.textContent = 'ONLINE';
+        serverStatusEl.className = 'monitor-item-value success';
+        pingValueEl.textContent = `${ping} ms`;
+        pingValueEl.className = ping < 150 ? 'monitor-item-value success' : ping < 300 ? 'monitor-item-value warning' : 'monitor-item-value error';
+        addSystemLog(`Server Online | Ping: ${ping}ms`, 'success');
+    } else {
+        mainStatusCard.className = 'vpn-status-card disconnected';
+        mainStatusIcon.className = 'status-indicator disconnected';
+        mainStatusIcon.textContent = '✕';
+        mainStatusText.textContent = 'HINDI KAPA NAKA CONNECT';
+        mainStatusDesc.textContent = 'Pumili muna ng address at SNI';
+        serverStatusEl.textContent = 'OFFLINE';
+        serverStatusEl.className = 'monitor-item-value error';
+        pingValueEl.textContent = `${ping} ms`;
+        pingValueEl.className = 'monitor-item-value error';
+        addSystemLog(`Server Offline | Ping: ${ping}ms`, 'error');
+    }
+    updateServerUptime();
+}
+
+function startMonitor() {
+    if(monitorInterval) clearInterval(monitorInterval);
+    latencyHistory = [];
+    
+    mainStatusCard.className = 'vpn-status-card checking';
+    mainStatusIcon.className = 'status-indicator checking';
+    mainStatusIcon.textContent = '⟳';
+    mainStatusText.textContent = 'SINUSURI ANG SERVER...';
+    mainStatusDesc.textContent = 'Naghihintay ng tugon...';
+    serverStatusEl.textContent = 'SINUSURI';
+    serverStatusEl.className = 'monitor-item-value warning';
+    pingValueEl.textContent = '---';
+    pingValueEl.className = 'monitor-item-value';
+    serverUptimeEl.textContent = 'NAGBUBUO...';
+    
+    addSystemLog('Sinimulan ang server monitoring', 'info');
+    fetchUserLocation();
+    checkServerStatus();
+    monitorInterval = setInterval(checkServerStatus, 5000);
+    setInterval(updateServerUptime, 1000);
+}
+
+function updateUI() {
+    infoHost.textContent=selectedAddress;
+    infoSni.textContent=selectedSNI;
+    infoProto.textContent=PROTOCOL_LABELS[selectedProtocol];
+    infoTransport.textContent=TRANSPORT_LABELS[selectedTransport];
+    configDisplay.value=buildConfig();
+    addSystemLog('Na-update ang lahat ng impormasyon at config', 'info');
+    startMonitor();
+}
+
+// SIMULA - WALANG PINAGBAGO
+window.addEventListener('load',()=>{
+    setTimeout(()=>{
+        loadingScreen.classList.add('hidden');
+        mainContent.style.display='flex';
+       
+        addSystemLog('Na-load nang buo ang VIRGOZKI PANEL', 'success');
+        buildList(addressListEl, addressList, 'address');
+        buildList(sniListEl, sniList, 'sni');
+        buildOptions(protoButtons, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, v=>{selectedProtocol=v; addSystemLog(`Pinalitan ang Protocol: ${PROTOCOL_LABELS[v]}`, 'info');});
+        buildOptions(transButtons, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, v=>{selectedTransport=v; addSystemLog(`Pinalitan ang Transport: ${TRANSPORT_LABELS[v]}`, 'info');});
         
-        mainStatusCard.className = 'vpn-status-card checking';
-        mainStatusIcon.className = 'status-indicator checking';
-        mainStatusIcon.textContent = '⟳';
-        mainStatusText.textContent = 'SINUSURI ANG SERVER...';
-        mainStatusDesc.textContent = 'Naghihintay ng tugon...';
-        serverStatusEl.textContent = 'SINUSURI';
-        serverStatusEl.className = 'monitor-item-value warning';
-        pingValueEl.textContent = '---';
-        pingValueEl.className = 'monitor-item-value';
-        serverUptimeEl.textContent = 'NAGBUBUO...';
-        
-        fetchUserLocation();
-        checkServerStatus();
-        monitorInterval = setInterval(checkServerStatus, 5000);
-        setInterval(updateServerUptime, 1000);
-    }
+        addressBtn.addEventListener('click', ()=>{addressModal.classList.add('show'); addSystemLog('Binuksan ang Address list', 'info');});
+        addressClose.addEventListener('click', ()=>addressModal.classList.remove('show'));
+        sniBtn.addEventListener('click', ()=>{sniModal.classList.add('show'); addSystemLog('Binuksan ang SNI list', 'info');});
+        sniClose.addEventListener('click', ()=>sniModal.classList.remove('show'));
 
-    function updateUI() {
-        infoHost.textContent=selectedAddress;
-        infoSni.textContent=selectedSNI;
-        infoProto.textContent=PROTOCOL_LABELS[selectedProtocol];
-        infoTransport.textContent=TRANSPORT_LABELS[selectedTransport];
-        configDisplay.value=buildConfig();
-        startMonitor();
-    }
+        playBtn.addEventListener('click', ()=>{
+            if(isPlaying){ audio.pause(); isPlaying=false; playBtn.textContent='▶'; addSystemLog('Pinause ang musika', 'info'); }
+            else { togglePlay(); }
+        });
+        document.getElementById('prev').addEventListener('click', prevSong);
+        document.getElementById('stop').addEventListener('click', stopMusic);
+        document.getElementById('next').addEventListener('click', nextSong);
+        audio.addEventListener('ended', nextSong);
+        loadSong(currentSongIndex);
 
-    // SIMULA - WALANG PINAGBAGO
-    window.addEventListener('load',()=>{
-        setTimeout(()=>{
-            loadingScreen.classList.add('hidden');
-            mainContent.style.display='flex';
-           
-            buildList(addressListEl, addressList, 'address');
-            buildList(sniListEl, sniList, 'sni');
-            buildOptions(protoButtons, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, v=>{selectedProtocol=v;});
-            buildOptions(transButtons, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, v=>{selectedTransport=v;});
-            
-            addressBtn.addEventListener('click', ()=>addressModal.classList.add('show'));
-            addressClose.addEventListener('click', ()=>addressModal.classList.remove('show'));
-            sniBtn.addEventListener('click', ()=>sniModal.classList.add('show'));
-            sniClose.addEventListener('click', ()=>sniModal.classList.remove('show'));
-
-            playBtn.addEventListener('click', ()=>{
-                if(isPlaying){ audio.pause(); isPlaying=false; playBtn.textContent='▶'; }
-                else { togglePlay(); }
+        // Copy config
+        copyBtn.addEventListener('click', ()=>{
+            navigator.clipboard.writeText(configDisplay.value).then(()=>{
+                copyBtn.textContent='✓ READY TO PASTE TO ANY V2RAY VPN!';
+                addSystemLog('Na-copy ang config sa clipboard', 'success');
+                setTimeout(()=>copyBtn.textContent='COPY',2000);
+            }).catch(()=>{
+                configDisplay.select();
+                document.execCommand('copy');
+                copyBtn.textContent='✓ READY TO PASTE TO ANY V2RAY VPN!';
+                addSystemLog('Na-copy ang config sa clipboard (fallback)', 'success');
+                setTimeout(()=>copyBtn.textContent='COPY',2000);
             });
-            document.getElementById('prev').addEventListener('click', prevSong);
-            document.getElementById('stop').addEventListener('click', stopMusic);
-            document.getElementById('next').addEventListener('click', nextSong);
-            audio.addEventListener('ended', nextSong);
-            loadSong(currentSongIndex);
+        });
 
-            // Copy config
-            copyBtn.addEventListener('click', ()=>{
-                navigator.clipboard.writeText(configDisplay.value).then(()=>{
-                    copyBtn.textContent='✓ READY TO PASTE TO ANY V2RAY VPN!';
-                    setTimeout(()=>copyBtn.textContent='COPY',2000);
-                }).catch(()=>{
-                    configDisplay.select();
-                    document.execCommand('copy');
-                    copyBtn.textContent='✓ READY TO PASTE TO ANY V2RAY VPN!';
-                    setTimeout(()=>copyBtn.textContent='COPY',2000);
-                });
-            });
-
-            // Runtime timer
-            setInterval(updateRuntime, 1000);
-            updateUI();
-        }, 2500);
-    });
+        updateUI();
+    }, 2500);
+});
 })();
 </script>
 </body>
-    </html>
+</html>
+
