@@ -280,7 +280,7 @@
         <div class="mini-graph-wrapper">
             <canvas id="mini-ping-graph" class="mini-graph-canvas"></canvas>
         </div>
-        <div class="graph-note">📈 PING HAPPY NA YAN</div>
+        <div class="graph-note">📈 VIRGOZKI VPN PANEL</div>
     </div>
 
     <div class="section">
@@ -309,7 +309,7 @@
         <div class="section-header"><div class="section-title">📋 GENERATED CONFIG</div></div>
         <div class="config-box">
             <textarea class="config-text" id="config-display" readonly>---</textarea>
-            <button class="copy-btn" id="copy-btn">Kopyahin</button>
+            <button class="copy-btn" id="copy-btn">COPY</button>
         </div>
     </div>
 </div>
@@ -658,7 +658,7 @@
             mainStatusIcon.className = 'status-indicator connected';
             mainStatusIcon.textContent = '✓';
             mainStatusText.textContent = 'CONNECTED';
-            mainStatusDesc.textContent = 'Server Not Response';
+            mainStatusDesc.textContent = 'HAPPY FREENET GUYS';
             serverStatusEl.textContent = 'ONLINE';
             serverStatusEl.className = 'monitor-item-value success';
             pingValueEl.textContent = `${ping} ms`;
@@ -667,8 +667,8 @@
             mainStatusCard.className = 'vpn-status-card disconnected';
             mainStatusIcon.className = 'status-indicator disconnected';
             mainStatusIcon.textContent = '✕';
-            mainStatusText.textContent = 'WALANG TUGON';
-            mainStatusDesc.textContent = 'Subukan ibang address o SNI';
+            mainStatusText.textContent = 'HINDI KAPA NAKA CONNECT';
+            mainStatusDesc.textContent = 'Pumili muna ng address at SNI';
             serverStatusEl.textContent = 'OFFLINE';
             serverStatusEl.className = 'monitor-item-value error';
             pingValueEl.textContent = `${ping} ms`;
@@ -736,12 +736,12 @@
             // Copy config
             copyBtn.addEventListener('click', ()=>{
                 navigator.clipboard.writeText(configDisplay.value).then(()=>{
-                    copyBtn.textContent='✓ READY TO PASTE!';
+                    copyBtn.textContent='✓ READY TO PASTE TO ANY V2RAY VPN!';
                     setTimeout(()=>copyBtn.textContent='COPY',2000);
                 }).catch(()=>{
                     configDisplay.select();
                     document.execCommand('copy');
-                    copyBtn.textContent='✓ READY TO PASTE!';
+                    copyBtn.textContent='✓ READY TO PASTE TO ANY V2RAY VPN!';
                     setTimeout(()=>copyBtn.textContent='COPY',2000);
                 });
             });
@@ -754,5 +754,4 @@
 })();
 </script>
 </body>
-</html>
-
+    </html>
