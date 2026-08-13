@@ -12,6 +12,8 @@
             --text-secondary: rgba(255, 255, 255, 0.7);
             --accent: #93c5fd;
             --success: #6ee7b7;
+            --warning: #fcd34d;
+            --error: #f87171;
             --bg-fallback: #050b18;
         }
 
@@ -63,212 +65,132 @@
             padding: 14px 16px;
             text-align: center;
         }
-        .vpn-status-card.connected {
-            border-color: rgba(110, 231, 183, 0.4);
-        }
+        .vpn-status-card.connected {border-color: rgba(110, 231, 183, 0.4);}
+        .vpn-status-card.checking {border-color: rgba(252, 211, 77, 0.4);}
+        .vpn-status-card.disconnected {border-color: rgba(248, 113, 113, 0.4);}
         .status-indicator {
-            width: 55px;
-            height: 55px;
-            margin: 0 auto 10px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            background: transparent;
+            width: 55px; height: 55px; margin: 0 auto 10px; border-radius: 50%;
+            border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
+            font-size: 22px; background: transparent;
         }
-        .status-indicator.connected {
-            border-color: var(--success);
-            color: var(--success);
-        }
-        .status-text {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 3px;
-        }
-        .status-subtext {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
+        .status-indicator.connected {border-color: var(--success); color: var(--success);}
+        .status-indicator.checking {border-color: var(--warning); color: var(--warning); animation: pulse 1.2s infinite;}
+        .status-indicator.disconnected {border-color: var(--error); color: var(--error);}
+        @keyframes pulse {0% {box-shadow: 0 0 0 0 rgba(252,211,77,0.2);} 70% {box-shadow: 0 0 0 10px rgba(252,211,77,0);} 100% {box-shadow: 0 0 0 0 rgba(252,211,77,0);}}
+        .status-text {font-size: 17px; font-weight: 700; margin-bottom: 3px;}
+        .status-subtext {font-size: 11px; color: var(--text-secondary);}
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        .info-box {
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px;
-        }
+        .info-grid {display: grid; grid-template-columns: 1fr 1fr; gap: 8px;}
+        .info-box {background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 10px;}
         .info-box.full {grid-column: 1 / -1;}
-        .info-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-bottom: 3px;
-        }
-        .info-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
-            word-break: break-all;
-        }
+        .info-label {font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px;}
+        .info-value {font-size: 13px; font-weight: 600; color: var(--accent); word-break: break-all;}
         .info-value.success {color: var(--success);}
 
-        .section {
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
+        /* 🆕 MONITOR BOX - LAHAT NANDITO SA ISANG KAHON */
+        .monitor-box {
+            background: transparent; border: 1px solid var(--border-accent); border-radius: 10px; padding: 12px;
         }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+        .monitor-header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+        .monitor-title {font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 5px;}
+        .monitor-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
         }
-        .section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text);
-            display: flex; align-items: center; gap: 5px;
+        .monitor-item {
+            padding: 8px; border-radius: 6px; background: rgba(0,0,0,0.1); border: 1px solid var(--border);
         }
-        .select-btn {
-            width: 100%;
-            padding: 10px 12px;
-            background: transparent;
-            border: 1px solid var(--border-accent);
-            border-radius: 6px;
-            color: var(--accent);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: left;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.2s;
+        .monitor-item-label {font-size: 9px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px;}
+        .monitor-item-value {font-size: 12px; font-weight: 600; color: var(--accent); word-break: break-all;}
+        .monitor-item-value.success {color: var(--success);}
+        .monitor-item-value.error {color: var(--error);}
+        .monitor-item-value.warning {color: var(--warning);}
+        /* 📊 MALIIT LANG NA GRAPH */
+        .mini-graph-wrapper {
+            width: 100%; height: 70px; border-radius: 6px; overflow: hidden;
+            background: rgba(0,0,0,0.1); border: 1px solid var(--border);
         }
-        .select-btn:hover {background: rgba(147, 197, 253, 0.06);}
-        .selected-value {
-            margin-top: 6px;
-            font-size: 12px;
-            color: var(--success);
-            font-weight: 500;
-            padding-left: 4px;
-        }
+        .mini-graph-canvas {width: 100%; height: 100%; display: block;}
+        .graph-note {font-size: 9px; color: var(--text-secondary); text-align: center; margin-top: 4px;}
 
-        .btn-group {
-            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;
+        .section {background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 12px;}
+        .section-header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+        .section-title {font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 5px;}
+        .select-btn {
+            width: 100%; padding: 10px 12px; background: transparent; border: 1px solid var(--border-accent);
+            border-radius: 6px; color: var(--accent); font-size: 13px; font-weight: 600;
+            cursor: pointer; text-align: left; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
         }
+        .select-btn:hover {background: rgba(147,197,253,0.06);}
+        .selected-value {margin-top: 6px; font-size: 12px; color: var(--success); font-weight: 500; padding-left: 4px;}
+
+        .btn-group {display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;}
         .option-btn {
-            flex: 1; min-width: 100px;
-            padding: 8px 10px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--text);
-            font-size: 12px; font-weight: 500;
-            cursor: pointer; transition: all 0.2s; text-align: center;
+            flex:1; min-width:100px; padding:8px 10px; background: transparent; border:1px solid var(--border);
+            border-radius:6px; color:var(--text); font-size:12px; font-weight:500; cursor:pointer; transition:all 0.2s; text-align:center;
         }
-        .option-btn.active {
-            border-color: var(--accent); color: var(--accent); font-weight: 600;
-        }
+        .option-btn.active {border-color: var(--accent); color: var(--accent); font-weight: 600;}
         .option-btn:hover {border-color: var(--accent);}
 
-        .config-box {
-            position: relative; margin-top: 8px;
-        }
+        .config-box {position: relative; margin-top: 8px;}
         .config-text {
-            width: 100%; min-height: 80px;
-            padding: 12px; padding-top: 32px;
-            background: rgba(0,0,0,0.05);
-            border: 1px solid var(--border); border-radius: 6px;
-            color: var(--success);
-            font-family: 'Consolas', monospace; font-size: 11px; line-height: 1.4;
+            width: 100%; min-height: 80px; padding: 12px; padding-top: 32px;
+            background: rgba(0,0,0,0.05); border: 1px solid var(--border); border-radius: 6px;
+            color: var(--success); font-family: 'Consolas', monospace; font-size: 11px; line-height: 1.4;
             resize: none; overflow-x: hidden;
         }
         .copy-btn {
-            position: absolute; top: 6px; right: 6px;
-            padding: 4px 8px;
-            background: transparent;
-            border: 1px solid var(--border-accent); border-radius: 4px;
-            color: var(--accent); font-size: 11px;
-            cursor: pointer; transition: all 0.2s;
+            position: absolute; top: 6px; right: 6px; padding: 4px 8px; background: transparent;
+            border: 1px solid var(--border-accent); border-radius: 4px; color: var(--accent);
+            font-size: 11px; cursor: pointer; transition: all 0.2s;
         }
-        .copy-btn:hover {background: rgba(147, 197, 253, 0.06);}
+        .copy-btn:hover {background: rgba(147,197,253,0.06);}
 
         #floating-player {
-            position: fixed;
-            top: 18px; left: 18px;
-            width: 250px;
-            background: transparent;
-            border: 1px solid var(--border-accent); border-radius: 12px;
-            padding: 12px; z-index: 99999; user-select: none;
+            position: fixed; top: 18px; left: 18px; width: 250px; background: transparent;
+            border: 1px solid var(--border-accent); border-radius: 12px; padding: 12px; z-index: 99999; user-select: none;
         }
         .player-drag-handle {
-            width: 100%; padding: 4px 0; margin-bottom: 8px;
-            cursor: grab; display: flex; align-items: center; justify-content: center; gap: 6px;
+            width: 100%; padding: 4px 0; margin-bottom: 8px; cursor: grab; display: flex; align-items: center; justify-content: center; gap: 6px;
             border-bottom: 1px solid rgba(147,197,253,0.2);
         }
         .player-drag-handle:active {cursor: grabbing;}
         .drag-text {font-size: 11px; color: var(--accent); font-weight: 500;}
         .player-title {font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 8px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .player-controls {display: flex; gap: 10px; justify-content: center;}
-        .p-btn {width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; font-size: 14px;}
+        .p-btn {
+            width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--accent);
+            background: transparent; color: var(--accent); cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
         .p-btn:hover {background: rgba(147,197,253,0.06);}
 
         .modal {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: transparent;
+            position: fixed; top:0; left:0; width:100%; height:100%; background: transparent;
             z-index: 99999; display: none; flex-direction: column; padding: 16px; overflow: hidden;
         }
-        .modal-bg-video {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            object-fit: cover; z-index: -1;
-            background: var(--bg-fallback);
-        }
+        .modal-bg-video {position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: -1; background: var(--bg-fallback);}
         .modal.show {display: flex;}
         .modal-list {flex:1; overflow-y: auto; margin-top: 10px; position: relative; z-index: 1;}
         .modal-item {
-            padding: 10px 14px; margin-bottom: 5px;
-            background: transparent;
-            border: 1px solid var(--border); border-radius: 6px;
-            cursor: pointer; font-size: 13px; transition: all 0.2s; color: var(--text);
+            padding: 10px 14px; margin-bottom: 5px; background: transparent; border: 1px solid var(--border);
+            border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; color: var(--text);
         }
-        .modal-item:hover, .modal-item.selected {
-            border-color: var(--border-accent); background: rgba(147,197,253,0.06);
-        }
+        .modal-item:hover, .modal-item.selected {border-color: var(--border-accent); background: rgba(147,197,253,0.06);}
         .modal-close {
             padding: 7px; background: transparent; border: 1px solid var(--border-accent); border-radius: 6px;
             color: var(--accent); cursor: pointer; text-align: center; margin-top: 8px; font-weight: 600; font-size: 13px; position: relative; z-index: 1;
         }
 
         #loading-screen {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background: var(--bg-fallback);
-            z-index: 999999; overflow: hidden;
-            transition: opacity 0.5s ease;
+            position: fixed; top:0; left:0; width:100%; height:100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--bg-fallback); z-index: 999999; overflow: hidden; transition: opacity 0.5s ease;
         }
         #loading-screen.hidden {opacity: 0; pointer-events: none;}
-        .loading-bg-video {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            object-fit: cover; z-index: -2;
-            background: var(--bg-fallback);
-        }
-        .loading-overlay {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: transparent; z-index: -1;
-        }
+        .loading-bg-video {position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover; z-index: -2; background: var(--bg-fallback);}
+        .loading-overlay {position: absolute; top:0; left:0; width:100%; height:100%; background: transparent; z-index: -1;}
         .load-text {font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 6px; position: relative; z-index: 1;}
         .load-sub {font-size: 13px; color: var(--text-secondary); position: relative; z-index: 1;}
-        .loader-spinner {
-            width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent);
-            border-radius: 50%; animation: spin 1s linear infinite; margin: 15px 0;
-        }
+        .loader-spinner {width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 15px 0;}
         @keyframes spin {to {transform: rotate(360deg);}}
     </style>
 </head>
@@ -290,10 +212,10 @@
 </div>
 
 <div class="container" id="main-content" style="display:none;">
-    <div class="vpn-status-card connected">
-        <div class="status-indicator connected">✓</div>
-        <div class="status-text">VIRGOZKI PANEL</div>
-        <div class="status-subtext">VIRGOZKI EDITION • LIBRENG INTERNET</div>
+    <div class="vpn-status-card" id="main-status-card">
+        <div class="status-indicator" id="main-status-icon">⟳</div>
+        <div class="status-text" id="main-status-text">KUMOKUHA NG IMPORMASYON...</div>
+        <div class="status-subtext" id="main-status-desc">VIRGOZKI EDITION • LIBRENG INTERNET</div>
     </div>
 
     <div class="info-grid">
@@ -317,6 +239,46 @@
             <div class="info-label">UPTIME</div>
             <div class="info-value success" id="runtime-display">00:00:00</div>
         </div>
+    </div>
+
+    <!-- 🆕 LAHAT NG MONITOR FEATURES NASA ISANG KAHON -->
+    <div class="monitor-box">
+        <div class="monitor-header">
+            <div class="monitor-title">📊 REAL-TIME SERVER MONITOR</div>
+        </div>
+
+        <div class="monitor-grid">
+            <div class="monitor-item">
+                <div class="monitor-item-label">YOUR IP ADDRESS</div>
+                <div class="monitor-item-value" id="user-ip">---</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-item-label">YOUR COUNTRY</div>
+                <div class="monitor-item-value" id="user-country">---</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-item-label">YOUR CITY</div>
+                <div class="monitor-item-value" id="user-city">---</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-item-label">SERVER STATUS</div>
+                <div class="monitor-item-value" id="server-status">---</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-item-label">PING / LATENCY</div>
+                <div class="monitor-item-value" id="ping-value">---</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-item-label">SERVER UPTIME</div>
+                <div class="monitor-item-value success" id="server-uptime">---</div>
+            </div>
+        </div>
+
+        <!-- 📊 MALIIT LANG NA GRAPH -->
+        <div class="mini-graph-wrapper">
+            <canvas id="mini-ping-graph" class="mini-graph-canvas"></canvas>
+        </div>
+        <div class="graph-note">📈 PING SA NAKARAANG 5 MINUTO</div>
     </div>
 
     <div class="section">
@@ -364,7 +326,7 @@
 </div>
 
 <div class="modal" id="address-modal">
-    <video class="modal-bg-video" autoplay muted loop playsinline preload="auto">
+    <video class="modal modal-bg-video" autoplay muted loop playsinline preload="auto">
         <source src="https://dl.dropboxusercontent.com/scl/fi/d2c75kh83416h0nd94aub/ssstik.io_-ai_inkdreams_1785391156354.mp4?rlkey=nv0yf6qlx47ar2mdqg4k7ouuw&st=rdfwok7e&dl=1" type="video/mp4">
     </video>
     <div class="section-title">🔌 PUMILI NG ADDRESS</div>
@@ -463,9 +425,25 @@
     const songName = document.getElementById('song-name');
     const player = document.getElementById('floating-player');
     const dragHandle = document.querySelector('.player-drag-handle');
+    const mainStatusCard = document.getElementById('main-status-card');
+    const mainStatusIcon = document.getElementById('main-status-icon');
+    const mainStatusText = document.getElementById('main-status-text');
+    const mainStatusDesc = document.getElementById('main-status-desc');
+    const userIpEl = document.getElementById('user-ip');
+    const userCountryEl = document.getElementById('user-country');
+    const userCityEl = document.getElementById('user-city');
+    const serverStatusEl = document.getElementById('server-status');
+    const pingValueEl = document.getElementById('ping-value');
+    const serverUptimeEl = document.getElementById('server-uptime');
+    const miniGraphCanvas = document.getElementById('mini-ping-graph');
+    const miniGraphCtx = miniGraphCanvas.getContext('2d');
 
     let isDragging = false, offsetX, offsetY;
+    let monitorInterval = null;
+    let latencyHistory = [];
+    let serverStartTime = Date.now();
 
+    // 🎵 DRAG & MUSIC FUNCTIONS - WALANG PINAGBAGO
     dragHandle.addEventListener('mousedown', e => {
         isDragging = true;
         offsetX = e.clientX - player.getBoundingClientRect().left;
@@ -530,7 +508,7 @@
     function prevSong() { currentSongIndex = (currentSongIndex-1+songs.length)%songs.length; loadSong(currentSongIndex); if(isPlaying) audio.play().catch(e=>{}); }
     function stopMusic() { audio.pause(); audio.currentTime=0; isPlaying=false; playBtn.textContent='▶'; }
 
-    // ✅ TAMA NA — TATLO LANG ANG GINALAWAN PARA SA XHTTP
+    // ⚙️ CONFIG GENERATOR - WALANG PINAGBAGO
     function buildConfig() {
         const addr=selectedAddress, sni=selectedSNI, host=currentHost, path=PATHS[selectedProtocol][selectedTransport];
         let transportParam = '';
@@ -541,25 +519,21 @@
         }
 
         switch(selectedProtocol){
-            // VLESS-XHTTP LANG ANG NAGBAGO
             case 'vless': 
                 if(selectedTransport === 'xhttp'){
                     return `vless://${UUID}@${addr}:443?encryption=none&${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=h2%2Chttp%2F1.1#VLESS-XHTTP-VIRGOZKI`;
                 } else {
                     return `vless://${UUID}@${addr}:443?encryption=none&${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=http%2F1.1#VLESS-${selectedTransport.toUpperCase()}-VIRGOZKI`;
                 }
-            // TROJAN-XHTTP LANG ANG NAGBAGO
             case 'trojan': 
                 if(selectedTransport === 'xhttp'){
                     return `trojan://${SS_PASSWORD}@${addr}:443?${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=h2%2Chttp%2F1.1#TROJAN-XHTTP-VIRGOZKI`;
                 } else {
                     return `trojan://${SS_PASSWORD}@${addr}:443?${transportParam}&security=tls&fp=chrome&sni=${sni}&alpn=http%2F1.1#TROJAN-${selectedTransport.toUpperCase()}-VIRGOZKI`;
                 }
-            // VMESS-XHTTP LANG ANG NAGBAGO
             case 'vmess': 
                 let alpnVal = selectedTransport === 'xhttp' ? 'h2,http/1.1' : 'http/1.1';
                 return `vmess://${btoa(JSON.stringify({v:'2',ps:`VMESS-${selectedTransport.toUpperCase()}-VIRGOZKI`,add:addr,port:'443',id:UUID,aid:'0',scy:'auto',net:selectedTransport,host:host,path:path,tls:'tls',sni:sni,fp:'chrome',alpn:alpnVal})).replace(/=+$/,'')}`;
-            // SHADOWSOCKS — WALANG PINAGBAGO
             case 'shadowsocks': 
                 const ssCred = btoa(`${SS_METHOD}:${SS_PASSWORD}`).replace(/=+$/,'');
                 return `ss://${ssCred}@${addr}:443?${transportParam}&security=tls&sni=${sni}#SS-${selectedTransport.toUpperCase()}-VIRGOZKI`;
@@ -595,43 +569,187 @@
         });
     }
 
+    // 📊 MALIIT NA GRAPH RENDER
+    function renderMiniGraph() {
+        const w = miniGraphCanvas.width = miniGraphCanvas.offsetWidth * 2;
+        const h = miniGraphCanvas.height = miniGraphCanvas.offsetHeight * 2;
+        miniGraphCtx.scale(2,2);
+        const cw = w/2, ch = h/2;
+        miniGraphCtx.clearRect(0,0,cw,ch);
+        if(latencyHistory.length < 2) return;
+
+        const maxP = Math.max(...latencyHistory) + 20;
+        const step = cw / (latencyHistory.length -1);
+
+        const grad = miniGraphCtx.createLinearGradient(0,0,0,ch);
+        grad.addColorStop(0, 'rgba(147,197,253,0.2)');
+        grad.addColorStop(1, 'rgba(147,197,253,0)');
+        miniGraphCtx.beginPath();
+        miniGraphCtx.moveTo(0, ch - (latencyHistory[0]/maxP)*ch);
+        latencyHistory.forEach((p,i)=>miniGraphCtx.lineTo(i*step, ch - (p/maxP)*ch));
+        miniGraphCtx.lineTo(cw,ch); miniGraphCtx.lineTo(0,ch);
+        miniGraphCtx.fillStyle = grad; miniGraphCtx.fill();
+
+        miniGraphCtx.beginPath();
+        miniGraphCtx.moveTo(0, ch - (latencyHistory[0]/maxP)*ch);
+        latencyHistory.forEach((p,i)=>miniGraphCtx.lineTo(i*step, ch - (p/maxP)*ch));
+        miniGraphCtx.strokeStyle = 'var(--accent)';
+        miniGraphCtx.lineWidth = 1.5; miniGraphCtx.stroke();
+    }
+
+    // ⏱️ SERVER UPTIME CALCULATION
+    function updateServerUptime() {
+        const diffMs = Date.now() - serverStartTime;
+        const days = Math.floor(diffMs / 86400000);
+        const hours = Math.floor((diffMs % 86400000) / 3600000);
+        const mins = Math.floor((diffMs % 3600000) / 60000);
+        const secs = Math.floor((diffMs % 60000) / 1000);
+        
+        let uptimeStr = '';
+        if(days>0) uptimeStr += `${days}d `;
+        if(hours>0 || days>0) uptimeStr += `${hours}h `;
+        if(mins>0 || hours>0 || days>0) uptimeStr += `${mins}m `;
+        uptimeStr += `${secs}s`;
+        serverUptimeEl.textContent = uptimeStr;
+    }
+
+    // 📡 KUNIN ANG IP AT LOKASYON NG USER
+    async function fetchUserLocation() {
+        try {
+            const res = await fetch('https://ipapi.co/json/');
+            const data = await res.json();
+            userIpEl.textContent = data.ip || 'Hindi makuha';
+            userCountryEl.textContent = data.country_name || 'Hindi makuha';
+            userCityEl.textContent = data.city || 'Hindi makuha';
+        } catch {
+            userIpEl.textContent = 'Hindi makuha';
+            userCountryEl.textContent = 'Hindi makuha';
+            userCityEl.textContent = 'Hindi makuha';
+        }
+    }
+
+    // 🩺 SERVER STATUS & PING CHECK
+    async function checkServerStatus() {
+        const t1 = performance.now();
+        const testUrl = `https://${selectedAddress}:443?${Date.now()}`;
+        let isOnline = false;
+        let ping = 999;
+
+        try {
+            const ctrl = new AbortController();
+            const timeout = setTimeout(()=>ctrl.abort(), 3000);
+            await fetch(testUrl, {mode:'no-cors', signal:ctrl.signal});
+            clearTimeout(timeout);
+            ping = Math.round(performance.now() - t1);
+            isOnline = true;
+        } catch {
+            ping = Math.round(performance.now() - t1);
+            isOnline = false;
+        }
+
+        latencyHistory.push(ping);
+        if(latencyHistory.length > 12) latencyHistory.shift();
+        renderMiniGraph();
+
+        if(isOnline){
+            mainStatusCard.className = 'vpn-status-card connected';
+            mainStatusIcon.className = 'status-indicator connected';
+            mainStatusIcon.textContent = '✓';
+            mainStatusText.textContent = 'KONEKTADO';
+            mainStatusDesc.textContent = 'Server ay tumutugon nang maayos';
+            serverStatusEl.textContent = 'ONLINE';
+            serverStatusEl.className = 'monitor-item-value success';
+            pingValueEl.textContent = `${ping} ms`;
+            pingValueEl.className = ping < 150 ? 'monitor-item-value success' : ping < 300 ? 'monitor-item-value warning' : 'monitor-item-value error';
+        } else {
+            mainStatusCard.className = 'vpn-status-card disconnected';
+            mainStatusIcon.className = 'status-indicator disconnected';
+            mainStatusIcon.textContent = '✕';
+            mainStatusText.textContent = 'WALANG TUGON';
+            mainStatusDesc.textContent = 'Subukan ibang address o SNI';
+            serverStatusEl.textContent = 'OFFLINE';
+            serverStatusEl.className = 'monitor-item-value error';
+            pingValueEl.textContent = `${ping} ms`;
+            pingValueEl.className = 'monitor-item-value error';
+        }
+        updateServerUptime();
+    }
+
+    function startMonitor() {
+        if(monitorInterval) clearInterval(monitorInterval);
+        latencyHistory = [];
+        
+        mainStatusCard.className = 'vpn-status-card checking';
+        mainStatusIcon.className = 'status-indicator checking';
+        mainStatusIcon.textContent = '⟳';
+        mainStatusText.textContent = 'SINUSURI ANG SERVER...';
+        mainStatusDesc.textContent = 'Naghihintay ng tugon...';
+        serverStatusEl.textContent = 'SINUSURI';
+        serverStatusEl.className = 'monitor-item-value warning';
+        pingValueEl.textContent = '---';
+        pingValueEl.className = 'monitor-item-value';
+        serverUptimeEl.textContent = 'NAGBUBUO...';
+        
+        fetchUserLocation();
+        checkServerStatus();
+        monitorInterval = setInterval(checkServerStatus, 5000);
+        setInterval(updateServerUptime, 1000);
+    }
+
     function updateUI() {
         infoHost.textContent=selectedAddress;
         infoSni.textContent=selectedSNI;
         infoProto.textContent=PROTOCOL_LABELS[selectedProtocol];
         infoTransport.textContent=TRANSPORT_LABELS[selectedTransport];
         configDisplay.value=buildConfig();
+        startMonitor();
     }
 
+    // 🚀 SIMULA NG LAHAT NG FUNCTIONS
     window.addEventListener('load',()=>{
         setTimeout(()=>{
             loadingScreen.classList.add('hidden');
             mainContent.style.display='flex';
-            loadSong(0);
-            updateUI();
+           
             buildList(addressListEl, addressList, 'address');
             buildList(sniListEl, sniList, 'sni');
-            buildOptions(protoButtons, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, v=>selectedProtocol=v);
-            buildOptions(transButtons, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, v=>selectedTransport=v);
+            buildOptions(protoButtons, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, v=>{selectedProtocol=v;});
+            buildOptions(transButtons, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, v=>{selectedTransport=v;});
+            
+            // Modal open/close events
+            addressBtn.addEventListener('click', ()=>addressModal.classList.add('show'));
+            addressClose.addEventListener('click', ()=>addressModal.classList.remove('show'));
+            sniBtn.addEventListener('click', ()=>sniModal.classList.add('show'));
+            sniClose.addEventListener('click', ()=>sniModal.classList.remove('show'));
+
+            // Music controls
+            playBtn.addEventListener('click', ()=>{
+                if(isPlaying){ audio.pause(); isPlaying=false; playBtn.textContent='▶'; }
+                else { togglePlay(); }
+            });
+            document.getElementById('prev').addEventListener('click', prevSong);
+            document.getElementById('stop').addEventListener('click', stopMusic);
+            document.getElementById('next').addEventListener('click', nextSong);
+            audio.addEventListener('ended', nextSong);
+            loadSong(currentSongIndex);
+
+            // Copy config
+            copyBtn.addEventListener('click', ()=>{
+                navigator.clipboard.writeText(configDisplay.value).then(()=>{
+                    copyBtn.textContent='✓ NAKOPYA!';
+                    setTimeout(()=>copyBtn.textContent='Kopyahin',2000);
+                }).catch(()=>{
+                    configDisplay.select();
+                    document.execCommand('copy');
+                    copyBtn.textContent='✓ NAKOPYA!';
+                    setTimeout(()=>copyBtn.textContent='Kopyahin',2000);
+                });
+            });
+
+            // Runtime timer
             setInterval(updateRuntime, 1000);
-        }, 2000);
-
-        addressBtn.addEventListener('click',()=>addressModal.classList.add('show'));
-        addressClose.addEventListener('click',()=>addressModal.classList.remove('show'));
-        sniBtn.addEventListener('click',()=>sniModal.classList.add('show'));
-        sniClose.addEventListener('click',()=>sniModal.classList.remove('show'));
-
-        playBtn.addEventListener('click', togglePlay);
-        document.getElementById('next').addEventListener('click', nextSong);
-        document.getElementById('prev').addEventListener('click', prevSong);
-        document.getElementById('stop').addEventListener('click', stopMusic);
-        audio.addEventListener('ended', nextSong);
-
-        copyBtn.addEventListener('click',()=>{
-            navigator.clipboard.writeText(configDisplay.value).then(()=>{
-                copyBtn.textContent='✅ NAKOPYA!'; setTimeout(()=>copyBtn.textContent='Kopyahin',2000);
-            }).catch(()=>alert('Gamitin ang long press para kopyahin ang text'));
-        });
+            updateUI();
+        }, 2500);
     });
 })();
 </script>
