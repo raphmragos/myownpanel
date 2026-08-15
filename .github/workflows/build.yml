@@ -7,8 +7,8 @@ on:
 
 env:
   DOCKER_REGISTRY: docker.io
-  DOCKER_NAMESPACE: raphmragos       # ✅ Username mo lang
-  IMAGE_NAME: myownpanel             # ✅ Pangalan ng repo mo sa Docker Hub
+  DOCKER_NAMESPACE: raphmragos
+  IMAGE_NAME: myownpanel
 
 jobs:
   build-and-push:
